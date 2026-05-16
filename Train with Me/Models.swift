@@ -1,0 +1,218 @@
+import SwiftUI
+import SwiftData
+import UniformTypeIdentifiers
+
+// MARK: - UIImage Extension
+
+extension UIImage {
+    convenience init?(color: UIColor, size: CGSize = CGSize(width: 1, height: 1)) {
+        let rect = CGRect(origin: .zero, size: size)
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0)
+        color.setFill(); UIRectFill(rect)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        guard let cgImage = image?.cgImage else { return nil }
+        self.init(cgImage: cgImage)
+    }
+}
+
+// MARK: - SwiftData Models
+
+@Model final class ExerciseSet {
+    var id: UUID
+    var weight: String
+    var reps: String
+    var date: Date
+
+    var rpe: Int?
+    var rir: Int?
+    var duration: Double?    // cardio: minutes (nil for strength sets)
+    var calories: Double?    // cardio: kcal    (nil for strength sets)
+
+    var volume: Double {
+        // For cardio sets use duration as the "volume" proxy (minutes)
+        if let d = duration { return d }
+        let w = weight.replacingOccurrences(of: ",", with: ".")
+        guard let wv = Double(w), let rv = Double(reps) else { return 0 }
+        return wv * rv
+    }
+    var oneRepMax: Double {
+        let w = weight.replacingOccurrences(of: ",", with: ".")
+        guard let wv = Double(w), let rv = Double(reps) else { return 0 }
+        if rv == 1 { return wv }
+        return wv * (1 + rv / 30.0)
+    }
+    var intensityScore: Double? {
+        guard let r = rpe, let ri = rir else { return nil }
+        return (Double(r) / 10.0 + Double(5 - ri) / 5.0) / 2.0
+    }
+    init(id: UUID = UUID(), weight: String, reps: String, date: Date = .now) {
+        self.id = id; self.weight = weight; self.reps = reps; self.date = date
+    }
+}
+
+@Model final class Machine {
+    var id: UUID
+    var name: String
+    var muscleGroup: String
+    var imageFileName: String
+    var notes: String
+    @Relationship(deleteRule: .cascade) var sets: [ExerciseSet]
+    init(id: UUID = UUID(), name: String, muscleGroup: String, imageFileName: String, notes: String = "") {
+        self.id = id; self.name = name; self.muscleGroup = muscleGroup
+        self.imageFileName = imageFileName; self.notes = notes; self.sets = []
+    }
+}
+
+@Model final class Routine {
+    var id: UUID
+    var name: String
+    var machineIDs: [UUID]
+    init(id: UUID = UUID(), name: String, machineIDs: [UUID] = []) {
+        self.id = id; self.name = name; self.machineIDs = machineIDs
+    }
+}
+
+// MARK: - Backup Structs
+
+struct ExerciseSetData: Codable { var id: UUID; var weight: String; var reps: String; var date: Date }
+struct MachineData: Codable { var id: UUID; var name: String; var muscleGroup: String; var imageFileName: String; var notes: String; var sets: [ExerciseSetData] }
+struct RoutineData: Codable { var id: UUID; var name: String; var machineIDs: [UUID] }
+struct BackupData: Codable {
+    let machines: [MachineData]; let muscleGroups: [String]; let routines: [RoutineData]?
+    let weightHistory: [ChartDataPoint]?; let waistHistory: [ChartDataPoint]?
+    let bodyFatHistory: [ChartDataPoint]?; let bicepsHistory: [ChartDataPoint]?
+    let chestHistory: [ChartDataPoint]?; let thighHistory: [ChartDataPoint]?
+    let imagesData: [String: Data]
+}
+struct LegacyBackupData: Codable { let machines: [MachineData]; let muscleGroups: [String]; let imagesData: [String: Data] }
+
+// MARK: - Feature Support Types
+
+enum RecoveryStatus {
+    case recovering, almostReady, ready, fresh
+    var color: Color {
+        switch self {
+        case .recovering:  return .red
+        case .almostReady: return .orange
+        case .ready:       return .yellow
+        case .fresh:       return .green
+        }
+    }
+    var label: String {
+        switch self {
+        case .recovering:  return "Erholt sich"
+        case .almostReady: return "Fast bereit"
+        case .ready:       return "Bereit"
+        case .fresh:       return "Ausgeruht"
+        }
+    }
+    var emoji: String {
+        switch self { case .recovering: return "😴"; case .almostReady: return "🟡"; case .ready: return "🟢"; case .fresh: return "💪" }
+    }
+}
+
+struct Achievement: Identifiable {
+    let id: String
+    let emoji: String
+    let title: String
+    let subtitle: String
+    var isUnlocked: Bool
+}
+
+struct PersonalRecord: Identifiable {
+    let id = UUID()
+    let machineName: String
+    let muscleGroup: String
+    let maxWeight: Double
+    let maxReps: Int
+    let bestOneRepMax: Double
+    let date: Date
+}
+
+struct OverloadSuggestion {
+    let lastWeight: Double
+    let lastReps: Int
+    let message: String
+}
+
+// MARK: - Chart / UI Models
+
+struct ChartDataPoint: Identifiable, Codable { var id = UUID(); var date: Date; var value: Double }
+struct MuscleShare: Identifiable { var id = UUID(); var name: String; var percentage: Double }
+
+enum AppTheme: String, CaseIterable, Identifiable, Codable {
+    case midnight = "Midnight"; case beast = "Beast Mode"; case sunset = "Sunset"; case ocean = "Ocean"
+    var id: String { rawValue }
+    var accentColor: Color {
+        switch self { case .midnight: return .blue; case .beast: return .red; case .sunset: return .pink; case .ocean: return .cyan }
+    }
+    @ViewBuilder var backgroundView: some View {
+        switch self {
+        case .midnight:
+            ZStack { Color.black.ignoresSafeArea()
+                LinearGradient(colors: [Color(red:0.1,green:0.1,blue:0.3), Color.purple.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea() }
+        case .beast:
+            ZStack { Color.black.ignoresSafeArea()
+                LinearGradient(colors: [.gray.opacity(0.2),.black], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
+                RadialGradient(colors: [.red.opacity(0.4),.clear], center: .bottomTrailing, startRadius: 0, endRadius: 500).ignoresSafeArea() }
+        case .sunset:
+            ZStack { Color(red:0.2,green:0.05,blue:0.1).ignoresSafeArea()
+                LinearGradient(colors: [.orange.opacity(0.6),.pink.opacity(0.6),.purple.opacity(0.6)], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea() }
+        case .ocean:
+            ZStack { Color(red:0.0,green:0.1,blue:0.2).ignoresSafeArea()
+                LinearGradient(colors: [.cyan.opacity(0.5),.blue.opacity(0.5)], startPoint: .top, endPoint: .bottom).ignoresSafeArea() }
+        }
+    }
+}
+
+enum VolumeStatus {
+    case noData, tooLow, minimal, optimal, high
+    var label: String {
+        switch self { case .noData: return "Keine Daten"; case .tooLow: return "Zu wenig"; case .minimal: return "Minimal"; case .optimal: return "Optimal"; case .high: return "Sehr viel" }
+    }
+    var color: Color {
+        switch self { case .noData: return .gray; case .tooLow: return .red; case .minimal: return .orange; case .optimal: return .green; case .high: return .blue }
+    }
+    var icon: String {
+        switch self { case .noData: return "minus"; case .tooLow: return "arrow.down"; case .minimal: return "arrow.up.right"; case .optimal: return "checkmark"; case .high: return "exclamationmark" }
+    }
+}
+
+enum PeriodizationPhase: Equatable {
+    case strength, hypertrophy, noData
+    var title: String {
+        switch self { case .strength: return "Kraftphase"; case .hypertrophy: return "Hypertrophiephase"; case .noData: return "" }
+    }
+    var emoji: String {
+        switch self { case .strength: return "🏋️"; case .hypertrophy: return "💪"; case .noData: return "" }
+    }
+    var description: String {
+        switch self {
+        case .strength:    return "Du trainierst viel im Kraftbereich (≤6 Wdh). Ein Wechsel zu 8–12 Wdh maximiert das Muskelwachstum."
+        case .hypertrophy: return "Du trainierst im Hypertrophiebereich (7–12 Wdh). Eine Kraftphase mit 4–6 Wdh baut Grundstärke auf."
+        case .noData:      return ""
+        }
+    }
+    var suggestion: String {
+        switch self { case .strength: return "Tipp: Wechsel zu Hypertrophie (8–12 Wdh)"; case .hypertrophy: return "Tipp: Probiere eine Kraftphase (4–6 Wdh)"; case .noData: return "" }
+    }
+}
+
+enum ChartMetric: String, CaseIterable, Identifiable { case oneRepMax = "🔥 1RM"; case volume = "📊 Volumen"; case maxWeight = "⚖️ Max kg"; var id: String { rawValue } }
+enum ChartTimeRange: String, CaseIterable, Identifiable { case week = "1W"; case month = "1M"; case quarter = "3M"; case half = "6M"; case year = "1J"; case all = "Alle"; var id: String { rawValue } }
+
+extension UTType {
+    static var trainingBackup: UTType { UTType(importedAs: "com.trainwithme.backup") }
+    static var csv: UTType { UTType(importedAs: "public.comma-separated-values-text") }
+}
+
+struct BackupDocument: FileDocument {
+    static var readableContentTypes: [UTType] { [.json] }
+    var fileURL: URL
+    init(fileURL: URL) { self.fileURL = fileURL }
+    init(configuration: ReadConfiguration) throws { fileURL = URL(fileURLWithPath: "") }
+    func fileWrapper(configuration: WriteConfiguration) throws -> FileWrapper {
+        FileWrapper(regularFileWithContents: try Data(contentsOf: fileURL))
+    }
+}
