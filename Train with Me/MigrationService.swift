@@ -11,7 +11,7 @@ final class MigrationService {
         migrateMuscleGroups(context: context)
         migrateBodyMeasurements(context: context)
         migrateCardioSets(context: context)
-        try? context.save()
+        guard (try? context.save()) != nil else { return }
         UserDefaults.standard.set(true, forKey: key)
     }
 
