@@ -94,6 +94,11 @@ final class TrainingService {
         saveContext()
     }
 
+    func updateMachineTimed(machineId: UUID, isTimed: Bool) {
+        machines.first(where: { $0.id == machineId })?.isTimed = isTimed
+        saveContext()
+    }
+
     func deleteMachine(machine: Machine) {
         guard let ctx = modelContext else { return }
         deleteImageFile(fileName: machine.imageFileName)
@@ -131,6 +136,31 @@ final class TrainingService {
                 .map { $0.value.reduce(0) { $0 + $1.volume } }.max() ?? 0
             return todayVol > bestVol && bestVol > 0
         }
+    }
+
+    /// Logs a timed set (e.g. plank). Returns true if it's a new duration PR.
+    @discardableResult
+    func addTimedSet(machineId: UUID, duration: Double, weight: String) -> Bool {
+        guard let m = machines.first(where: { $0.id == machineId }) else { return false }
+        let w = weight.trimmingCharacters(in: .whitespaces).isEmpty ? "0" : weight
+        let s = ExerciseSet(weight: w, reps: "1", date: Date())
+        s.duration = duration
+        m.sets.append(s); calculateStats()
+        let cal = Calendar.current
+        let todayMax = m.sets.filter { cal.isDateInToday($0.date) }.compactMap { $0.duration }.max() ?? 0
+        let prevMax  = Dictionary(grouping: m.sets.filter { $0.duration != nil }) { cal.startOfDay(for: $0.date) }
+            .filter { !cal.isDateInToday($0.key) }
+            .compactMap { $0.value.compactMap { $0.duration }.max() }.max()
+        guard let prev = prevMax else { return false }
+        return todayMax > prev
+    }
+
+    func updateTimedSet(machineId: UUID, setId: UUID, duration: Double, weight: String) {
+        guard let m = machines.first(where: { $0.id == machineId }),
+              let s = m.sets.first(where: { $0.id == setId }) else { return }
+        s.duration = duration
+        s.weight = weight.trimmingCharacters(in: .whitespaces).isEmpty ? "0" : weight
+        saveContext()
     }
 
     func addCardioSet(machineId: UUID, duration: Double, calories: Double) {
@@ -175,6 +205,23 @@ final class TrainingService {
         let last  = byDay[0].value
         let lastW = last.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
         let lastR = last.compactMap { Int($0.reps) }.max() ?? 0
+
+        if machine.isTimed {
+            let lastMax = last.compactMap { $0.duration }.max() ?? 0
+            let fmtDur: (Double) -> String = { s in s < 60 ? "\(Int(s))s" : "\(Int(s/60)):\(String(format: "%02d", Int(s)%60)) min" }
+            if byDay.count == 1 {
+                return OverloadSuggestion(lastWeight: lastMax, lastReps: 1,
+                    message: "Letzte Haltezeit: \(fmtDur(lastMax)) – länger halten 🎯")
+            }
+            let prevMax = byDay[1].value.compactMap { $0.duration }.max() ?? 0
+            if lastMax >= prevMax {
+                return OverloadSuggestion(lastWeight: lastMax, lastReps: 1,
+                    message: "Letzte Haltezeit: \(fmtDur(lastMax)) → heute \(fmtDur(lastMax + 10)) anpeilen 💡")
+            } else {
+                return OverloadSuggestion(lastWeight: lastMax, lastReps: 1,
+                    message: "Letzte Haltezeit: \(fmtDur(lastMax))")
+            }
+        }
 
         if machine.isAssisted {
             let lastMinW = last.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.min() ?? lastW
@@ -363,6 +410,14 @@ final class TrainingService {
     var personalRecords: [PersonalRecord] {
         machines.compactMap { m in
             guard !m.sets.isEmpty else { return nil }
+            if m.isTimed {
+                let timed = m.sets.compactMap { $0.duration }
+                guard !timed.isEmpty else { return nil }
+                let bestDur = timed.max()!
+                let best = m.sets.filter { $0.duration == bestDur }.first!
+                return PersonalRecord(machineName: m.name, muscleGroup: m.muscleGroup, isAssisted: false, isTimed: true,
+                                      maxWeight: bestDur, maxReps: 1, bestOneRepMax: 0, date: best.date)
+            }
             if m.isAssisted {
                 let valid = m.sets.filter { (Int($0.reps) ?? 0) > 0 }
                 guard !valid.isEmpty else { return nil }
@@ -371,16 +426,17 @@ final class TrainingService {
                     (Double($0.weight.replacingOccurrences(of: ",", with: ".")) ?? .infinity) <
                     (Double($1.weight.replacingOccurrences(of: ",", with: ".")) ?? .infinity)
                 })!
-                return PersonalRecord(machineName: m.name, muscleGroup: m.muscleGroup, isAssisted: true,
+                return PersonalRecord(machineName: m.name, muscleGroup: m.muscleGroup, isAssisted: true, isTimed: false,
                                       maxWeight: minW, maxReps: Int(best.reps) ?? 0, bestOneRepMax: 0, date: best.date)
             } else {
                 let best = m.sets.max(by: { $0.oneRepMax < $1.oneRepMax })!
                 let maxW = m.sets.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
                 let maxR = m.sets.compactMap { Int($0.reps) }.max() ?? 0
-                return PersonalRecord(machineName: m.name, muscleGroup: m.muscleGroup, isAssisted: false,
+                return PersonalRecord(machineName: m.name, muscleGroup: m.muscleGroup, isAssisted: false, isTimed: false,
                                       maxWeight: maxW, maxReps: maxR, bestOneRepMax: best.oneRepMax, date: best.date)
             }
         }.sorted {
+            if $0.isTimed != $1.isTimed { return !$0.isTimed }
             if $0.isAssisted != $1.isAssisted { return !$0.isAssisted }
             if $0.isAssisted { return $0.maxWeight < $1.maxWeight }
             return $0.bestOneRepMax > $1.bestOneRepMax
@@ -462,7 +518,7 @@ final class TrainingService {
         var newM: [Machine] = []
         for md in ml {
             let m = Machine(id: md.id, name: md.name, muscleGroup: md.muscleGroup,
-                            imageFileName: md.imageFileName, notes: md.notes, isAssisted: md.isAssisted ?? false)
+                            imageFileName: md.imageFileName, notes: md.notes, isAssisted: md.isAssisted ?? false, isTimed: md.isTimed ?? false)
             for sd in md.sets { m.sets.append(ExerciseSet(id: sd.id, weight: sd.weight, reps: sd.reps, date: sd.date)) }
             ctx.insert(m); newM.append(m)
         }

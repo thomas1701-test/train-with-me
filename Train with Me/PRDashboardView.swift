@@ -99,7 +99,13 @@ struct PRRow: View {
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 4) {
-                if pr.isAssisted {
+                if pr.isTimed {
+                    HStack(spacing: 4) {
+                        Image(systemName: "stopwatch.fill").foregroundColor(.cyan).font(.caption)
+                        Text(formatDuration(pr.maxWeight)).font(.headline).foregroundColor(.white)
+                    }
+                    Text("Beste Haltezeit").font(.caption).foregroundColor(.cyan.opacity(0.8))
+                } else if pr.isAssisted {
                     HStack(spacing: 4) {
                         Image(systemName: "arrow.down.circle.fill").foregroundColor(.blue).font(.caption)
                         Text("Min: \(formatWeight(pr.maxWeight)) kg").font(.headline).foregroundColor(.white)
@@ -124,6 +130,12 @@ struct PRRow: View {
 
     private func formatWeight(_ w: Double) -> String {
         w.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(w))" : String(format: "%.1f", w)
+    }
+
+    private func formatDuration(_ s: Double) -> String {
+        let sec = Int(s)
+        if sec < 60 { return "\(sec)s" }
+        return "\(sec / 60):\(String(format: "%02d", sec % 60)) min"
     }
 }//
 //  PRDashboardView.swift

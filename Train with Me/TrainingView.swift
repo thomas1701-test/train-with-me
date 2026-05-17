@@ -23,12 +23,19 @@ struct TrainingView: View {
     @State private var selectedSetIDForIntensity: UUID? = nil
     @State private var editRPE: Int = 7
     @State private var editRIR: Int = 2
+    @State private var stopwatchActive = false
+    @State private var stopwatchElapsed = 0.0
+    @State private var timedSetWeight = ""
+    @State private var editingTimedSet: ExerciseSet? = nil
+    @State private var editDurationSeconds = ""
+    @State private var editTimedWeight = ""
 
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
     var currentMachine: Machine { viewModel.training.machines.first(where: { $0.id == machine.id }) ?? machine }
     var isCardio: Bool { currentMachine.muscleGroup.lowercased() == "cardio" }
     var isAssisted: Bool { currentMachine.isAssisted }
+    var isTimed: Bool { currentMachine.isTimed }
 
     var chartData: [ChartDataPoint] {
         let grouped = Dictionary(grouping: currentMachine.sets) { Calendar.current.startOfDay(for: $0.date) }
@@ -91,6 +98,16 @@ struct TrainingView: View {
                                         Text("Unterstützungsgerät").foregroundColor(.white).font(.subheadline)
                                     }
                                 }.tint(.blue)
+
+                                Toggle(isOn: Binding(
+                                    get: { currentMachine.isTimed },
+                                    set: { viewModel.training.updateMachineTimed(machineId: currentMachine.id, isTimed: $0) }
+                                )) {
+                                    HStack(spacing: 6) {
+                                        Image(systemName: "stopwatch.fill").foregroundColor(.cyan)
+                                        Text("Zeitbasierte Übung").foregroundColor(.white).font(.subheadline)
+                                    }
+                                }.tint(.cyan)
                             }
                         }.padding(.horizontal).onAppear { notesInput = currentMachine.notes }
 
@@ -120,18 +137,28 @@ struct TrainingView: View {
                         }
 
                         // Eingabe
-                        HStack {
-                            TextField(isCardio ? "min" : (isAssisted ? "kg Unterstützung" : "kg"), text: $weight)
-                                .keyboardType(.decimalPad).multilineTextAlignment(.center).padding()
-                                .background(Color.white.opacity(0.1)).cornerRadius(10).foregroundColor(.white)
-                            TextField(isCardio ? "Level / Kcal" : "Wdh", text: $reps)
-                                .keyboardType(.decimalPad).multilineTextAlignment(.center).padding()
-                                .background(Color.white.opacity(0.1)).cornerRadius(10).foregroundColor(.white)
-                            Button(action: addSetAction) {
-                                Image(systemName: "plus").font(.title).foregroundColor(.white).padding()
-                                    .background(viewModel.currentTheme.accentColor).clipShape(Circle())
-                            }
-                        }.padding(.horizontal)
+                        if isTimed {
+                            StopwatchInputView(
+                                elapsed: stopwatchElapsed,
+                                isActive: stopwatchActive,
+                                weight: $timedSetWeight,
+                                accentColor: viewModel.currentTheme.accentColor,
+                                onToggle: toggleStopwatch
+                            ).padding(.horizontal)
+                        } else {
+                            HStack {
+                                TextField(isCardio ? "min" : (isAssisted ? "kg Unterstützung" : "kg"), text: $weight)
+                                    .keyboardType(.decimalPad).multilineTextAlignment(.center).padding()
+                                    .background(Color.white.opacity(0.1)).cornerRadius(10).foregroundColor(.white)
+                                TextField(isCardio ? "Level / Kcal" : "Wdh", text: $reps)
+                                    .keyboardType(.decimalPad).multilineTextAlignment(.center).padding()
+                                    .background(Color.white.opacity(0.1)).cornerRadius(10).foregroundColor(.white)
+                                Button(action: addSetAction) {
+                                    Image(systemName: "plus").font(.title).foregroundColor(.white).padding()
+                                        .background(viewModel.currentTheme.accentColor).clipShape(Circle())
+                                }
+                            }.padding(.horizontal)
+                        }
 
                         // Intensitäts-Durchschnitt
                         if let avg = viewModel.training.averageIntensity(for: currentMachine.id) {
@@ -149,6 +176,13 @@ struct TrainingView: View {
                                             let displayKcal = set.calories.map { String(format: "%.0f", $0) } ?? set.reps
                                             Text("\(displayMin) min").bold()
                                             Text("| \(displayKcal) Kcal").bold()
+                                        } else if isTimed, let dur = set.duration {
+                                            Image(systemName: "stopwatch.fill").foregroundColor(.cyan).font(.caption)
+                                            Text(formatStopwatch(dur)).bold()
+                                            if let w = Double(set.weight.replacingOccurrences(of: ",", with: ".")), w > 0 {
+                                                Text("+ \(w.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(w))" : String(format: "%.1f", w)) kg")
+                                                    .font(.caption).foregroundColor(.white.opacity(0.6))
+                                            }
                                         } else if isAssisted {
                                             Image(systemName: "arrow.down.circle.fill").foregroundColor(.blue).font(.caption)
                                             Text("\(set.weight) kg").bold()
@@ -160,20 +194,31 @@ struct TrainingView: View {
                                     }.foregroundColor(.white)
                                 }
                                 Spacer()
-                                if !isCardio && !isAssisted { Text("1RM: \(Int(set.oneRepMax))").font(.caption).foregroundColor(viewModel.currentTheme.accentColor) }
-                                Button(action: {
-                                    editRPE = set.rpe ?? 7
-                                    editRIR = set.rir ?? 2
-                                    selectedSetIDForIntensity = set.id
-                                }) {
-                                    Circle()
-                                        .fill(intensityColor(score: set.intensityScore))
-                                        .frame(width: 14, height: 14)
-                                        .overlay(Circle().stroke(Color.white.opacity(0.2), lineWidth: 1))
-                                }.buttonStyle(.plain)
+                                if !isCardio && !isAssisted && !isTimed { Text("1RM: \(Int(set.oneRepMax))").font(.caption).foregroundColor(viewModel.currentTheme.accentColor) }
+                                if !isTimed {
+                                    Button(action: {
+                                        editRPE = set.rpe ?? 7
+                                        editRIR = set.rir ?? 2
+                                        selectedSetIDForIntensity = set.id
+                                    }) {
+                                        Circle()
+                                            .fill(intensityColor(score: set.intensityScore))
+                                            .frame(width: 14, height: 14)
+                                            .overlay(Circle().stroke(Color.white.opacity(0.2), lineWidth: 1))
+                                    }.buttonStyle(.plain)
+                                }
                             }
                             .padding().glassStyle().padding(.horizontal)
-                            .contextMenu { Button("Löschen", role: .destructive) { viewModel.training.deleteSet(machineId: currentMachine.id, setId: set.id) } }
+                            .contextMenu {
+                                if isTimed {
+                                    Button("Bearbeiten") {
+                                        editDurationSeconds = set.duration.map { "\(Int($0))" } ?? ""
+                                        editTimedWeight = set.weight == "0" ? "" : set.weight
+                                        editingTimedSet = set
+                                    }
+                                }
+                                Button("Löschen", role: .destructive) { viewModel.training.deleteSet(machineId: currentMachine.id, setId: set.id) }
+                            }
                         }
                     }
                 }
@@ -205,8 +250,17 @@ struct TrainingView: View {
                 selectedSetIDForIntensity = nil
             }
         }
+        .sheet(isPresented: Binding(get: { editingTimedSet != nil }, set: { if !$0 { editingTimedSet = nil } })) {
+            EditTimedSetSheet(durationSeconds: $editDurationSeconds, weight: $editTimedWeight) {
+                if let s = editingTimedSet, let dur = Double(editDurationSeconds) {
+                    viewModel.training.updateTimedSet(machineId: currentMachine.id, setId: s.id, duration: dur, weight: editTimedWeight)
+                }
+                editingTimedSet = nil
+            }
+        }
         .onChange(of: newImage) { _, img in if let i = img { viewModel.training.updateMachineImage(machineId: currentMachine.id, newImage: i) } }
         .onReceive(timer) { _ in
+            if stopwatchActive { stopwatchElapsed += 1 }
             guard timerActive else { return }
             if timeRemaining > 0 {
                 timeRemaining -= 1
@@ -219,6 +273,38 @@ struct TrainingView: View {
             }
         }
         .onDisappear { Task { let s = TimerAttributes.ContentState(timeRemaining: Int(timeRemaining)); await liveActivity?.end(using: s, dismissalPolicy: .immediate) } }
+    }
+
+    func formatStopwatch(_ seconds: Double) -> String {
+        let s = Int(seconds)
+        return "\(s / 60):\(String(format: "%02d", s % 60))"
+    }
+
+    func toggleStopwatch() {
+        if stopwatchActive {
+            stopwatchActive = false
+            let duration = stopwatchElapsed
+            stopwatchElapsed = 0
+            guard duration > 0 else { return }
+            if !viewModel.isWorkoutActive { viewModel.startWorkout() }
+            let isPR = viewModel.training.addTimedSet(machineId: currentMachine.id, duration: duration, weight: timedSetWeight)
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+            withAnimation { showSavedPopup = true }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { withAnimation { showSavedPopup = false } }
+            if isPR {
+                UINotificationFeedbackGenerator().notificationOccurred(.success)
+                withAnimation { showPRAnimation = true }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { withAnimation { showPRAnimation = false } }
+            }
+            if viewModel.timerEnabled {
+                totalTime = viewModel.timerDuration; timeRemaining = viewModel.timerDuration; timerActive = true
+                NotificationManager.shared.scheduleTimerNotification(seconds: viewModel.timerDuration)
+            }
+        } else {
+            stopwatchElapsed = 0
+            stopwatchActive = true
+            UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        }
     }
 
     private func intensityColor(score: Double?) -> Color {
@@ -354,6 +440,96 @@ struct IntensitySheet: View {
             }.padding(.horizontal).padding(.bottom, 10)
         }
         .presentationDetents([.height(390)])
+        .presentationDragIndicator(.visible)
+    }
+}
+
+// MARK: - Stopwatch Input
+
+struct StopwatchInputView: View {
+    let elapsed: Double
+    let isActive: Bool
+    @Binding var weight: String
+    let accentColor: Color
+    let onToggle: () -> Void
+
+    private func fmt(_ s: Double) -> String { "\(Int(s) / 60):\(String(format: "%02d", Int(s) % 60))" }
+
+    var body: some View {
+        VStack(spacing: 16) {
+            HStack {
+                Text("Zusatzgewicht (optional)").font(.caption).foregroundColor(.white.opacity(0.7))
+                Spacer()
+                TextField("kg", text: $weight)
+                    .keyboardType(.decimalPad).multilineTextAlignment(.trailing)
+                    .foregroundColor(.white).frame(width: 80)
+                    .padding(8).background(Color.white.opacity(0.1)).cornerRadius(8)
+            }
+
+            Text(fmt(elapsed))
+                .font(.system(size: 72, weight: .thin, design: .monospaced))
+                .foregroundColor(isActive ? .cyan : .white)
+                .animation(.none, value: elapsed)
+
+            Button(action: onToggle) {
+                HStack(spacing: 10) {
+                    Image(systemName: isActive ? "stop.circle.fill" : "play.circle.fill").font(.title2)
+                    Text(isActive ? "Stopp & eintragen" : "Starten").font(.headline)
+                }
+                .foregroundColor(.white)
+                .padding(.horizontal, 36).padding(.vertical, 14)
+                .background(isActive ? Color.red.opacity(0.85) : accentColor)
+                .cornerRadius(30)
+            }
+        }
+        .padding(16)
+        .background(Color.white.opacity(0.05))
+        .cornerRadius(20)
+        .overlay(RoundedRectangle(cornerRadius: 20).stroke(isActive ? Color.cyan.opacity(0.4) : Color.white.opacity(0.1), lineWidth: 1))
+    }
+}
+
+// MARK: - Edit Timed Set Sheet
+
+struct EditTimedSetSheet: View {
+    @Binding var durationSeconds: String
+    @Binding var weight: String
+    let onSave: () -> Void
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Satz bearbeiten").font(.headline).padding(.top, 20)
+
+            VStack(spacing: 12) {
+                HStack {
+                    Text("Dauer (Sekunden)").foregroundColor(.primary)
+                    Spacer()
+                    TextField("z.B. 90", text: $durationSeconds)
+                        .keyboardType(.numberPad).multilineTextAlignment(.trailing)
+                        .frame(width: 100).padding(8)
+                        .background(Color(.tertiarySystemBackground)).cornerRadius(8)
+                }
+                HStack {
+                    Text("Zusatzgewicht (kg)").foregroundColor(.primary)
+                    Spacer()
+                    TextField("optional", text: $weight)
+                        .keyboardType(.decimalPad).multilineTextAlignment(.trailing)
+                        .frame(width: 100).padding(8)
+                        .background(Color(.tertiarySystemBackground)).cornerRadius(8)
+                }
+            }
+            .padding()
+            .background(Color(.secondarySystemBackground))
+            .cornerRadius(12)
+            .padding(.horizontal)
+
+            Button(action: onSave) {
+                Text("Speichern").font(.headline).foregroundColor(.white)
+                    .frame(maxWidth: .infinity).padding()
+                    .background(Color.cyan).cornerRadius(16)
+            }.padding(.horizontal).padding(.bottom, 10)
+        }
+        .presentationDetents([.height(300)])
         .presentationDragIndicator(.visible)
     }
 }

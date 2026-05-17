@@ -7,9 +7,21 @@ struct ChangelogEntry {
 }
 
 enum Changelog {
-    static let currentVersion = "1.3.0"
+    static let currentVersion = "1.4.0"
 
     static let entries: [ChangelogEntry] = [
+        ChangelogEntry(
+            version: "1.4.0",
+            date: "17.05.2026",
+            changes: [
+                "Stopwatch-Feature für zeitbasierte Übungen (Plank, Wall-Sit etc.)",
+                "Satz starten → Stopuhr läuft → stoppen → Zeit wird automatisch eingetragen",
+                "Optionales Zusatzgewicht für gewichtete Varianten",
+                "Manuelle Bearbeitung von Sätzen (Dauer & Gewicht editierbar)",
+                "PR-Erkennung: neue Bestzeit löst Record-Animation aus",
+                "PR-Dashboard zeigt beste Haltezeit für Zeitübungen"
+            ]
+        ),
         ChangelogEntry(
             version: "1.3.0",
             date: "17.05.2026",

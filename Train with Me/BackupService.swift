@@ -21,7 +21,7 @@ final class BackupService {
             let backup = BackupData(
                 machines: training.machines.map { m in
                     MachineData(id: m.id, name: m.name, muscleGroup: m.muscleGroup,
-                                imageFileName: m.imageFileName, notes: m.notes, isAssisted: m.isAssisted,
+                                imageFileName: m.imageFileName, notes: m.notes, isAssisted: m.isAssisted, isTimed: m.isTimed,
                                 sets: m.sets.map { ExerciseSetData(id: $0.id, weight: $0.weight, reps: $0.reps, date: $0.date) })
                 },
                 muscleGroups:   training.muscleGroupNames(),

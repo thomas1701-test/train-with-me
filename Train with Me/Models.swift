@@ -58,10 +58,11 @@ extension UIImage {
     var imageFileName: String
     var notes: String
     var isAssisted: Bool
+    var isTimed: Bool
     @Relationship(deleteRule: .cascade) var sets: [ExerciseSet]
-    init(id: UUID = UUID(), name: String, muscleGroup: String, imageFileName: String, notes: String = "", isAssisted: Bool = false) {
+    init(id: UUID = UUID(), name: String, muscleGroup: String, imageFileName: String, notes: String = "", isAssisted: Bool = false, isTimed: Bool = false) {
         self.id = id; self.name = name; self.muscleGroup = muscleGroup
-        self.imageFileName = imageFileName; self.notes = notes; self.isAssisted = isAssisted; self.sets = []
+        self.imageFileName = imageFileName; self.notes = notes; self.isAssisted = isAssisted; self.isTimed = isTimed; self.sets = []
     }
 }
 
@@ -77,7 +78,7 @@ extension UIImage {
 // MARK: - Backup Structs
 
 struct ExerciseSetData: Codable { var id: UUID; var weight: String; var reps: String; var date: Date }
-struct MachineData: Codable { var id: UUID; var name: String; var muscleGroup: String; var imageFileName: String; var notes: String; var isAssisted: Bool?; var sets: [ExerciseSetData] }
+struct MachineData: Codable { var id: UUID; var name: String; var muscleGroup: String; var imageFileName: String; var notes: String; var isAssisted: Bool?; var isTimed: Bool?; var sets: [ExerciseSetData] }
 struct RoutineData: Codable { var id: UUID; var name: String; var machineIDs: [UUID] }
 struct BackupData: Codable {
     let machines: [MachineData]; let muscleGroups: [String]; let routines: [RoutineData]?
@@ -126,7 +127,8 @@ struct PersonalRecord: Identifiable {
     let machineName: String
     let muscleGroup: String
     let isAssisted: Bool
-    let maxWeight: Double   // normal: highest weight ever; assisted: lowest weight ever (= best)
+    let isTimed: Bool
+    let maxWeight: Double   // normal: highest weight; assisted: lowest weight; timed: best duration in seconds
     let maxReps: Int
     let bestOneRepMax: Double
     let date: Date
