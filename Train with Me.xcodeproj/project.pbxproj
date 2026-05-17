@@ -557,7 +557,7 @@
 				DEVELOPMENT_TEAM = RVXL7PUD42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "Train with Me Watch Watch App/Info.plist";
+				INFOPLIST_FILE = "Watch-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -589,7 +589,7 @@
 				DEVELOPMENT_TEAM = RVXL7PUD42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = "Train with Me Watch Watch App/Info.plist";
+				INFOPLIST_FILE = "Watch-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
