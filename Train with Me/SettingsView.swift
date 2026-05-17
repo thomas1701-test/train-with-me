@@ -104,6 +104,31 @@ struct SettingsView: View {
                             }
                         }
                     }
+                    GlassSection(title: "Changelog") {
+                        VStack(alignment: .leading, spacing: 16) {
+                            ForEach(Changelog.entries, id: \.version) { entry in
+                                VStack(alignment: .leading, spacing: 6) {
+                                    HStack {
+                                        Text("v\(entry.version)")
+                                            .font(.subheadline.bold()).foregroundColor(.white)
+                                        Spacer()
+                                        Text(entry.date)
+                                            .font(.caption).foregroundColor(.white.opacity(0.5))
+                                    }
+                                    ForEach(entry.changes, id: \.self) { change in
+                                        HStack(alignment: .top, spacing: 8) {
+                                            Text("•").foregroundColor(.white.opacity(0.4)).font(.caption)
+                                            Text(change).font(.caption).foregroundColor(.white.opacity(0.7))
+                                        }
+                                    }
+                                }
+                                if entry.version != Changelog.entries.last?.version {
+                                    Divider().background(Color.white.opacity(0.15))
+                                }
+                            }
+                        }
+                    }
+
                 }.padding()
             }
         }
