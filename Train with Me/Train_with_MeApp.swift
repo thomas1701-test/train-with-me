@@ -1,17 +1,15 @@
-//
-//  Train_with_MeApp.swift
-//  Train with Me
-//
-//  Created by Thomas on 03.02.26.
-//
-
 import SwiftUI
+import SwiftData
 
 @main
 struct Train_with_MeApp: App {
+    @State private var appViewModel = AppViewModel()
+
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environment(appViewModel)
+                .modelContainer(for: [Machine.self, Routine.self, BodyMeasurement.self, MuscleGroup.self])
         }
     }
 }
