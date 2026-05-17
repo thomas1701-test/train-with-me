@@ -60,7 +60,7 @@ final class AppViewModel {
         workoutStartDate = Date()
     }
 
-    func finishWorkout() {
+    @MainActor func finishWorkout() {
         let end = Date()
         var vol = 0.0; var muscles: Set<String> = []; var todayData: [(machine: Machine, sets: [ExerciseSet])] = []
         for m in training.machines {
