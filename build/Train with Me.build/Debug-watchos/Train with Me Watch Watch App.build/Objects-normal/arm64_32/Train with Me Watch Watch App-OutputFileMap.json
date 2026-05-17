@@ -1,0 +1,39 @@
+{
+  "" : {
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train with Me Watch Watch App-primary.dia",
+    "emit-module-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train with Me Watch Watch App-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train with Me Watch Watch App-primary-emit-module.dia",
+    "pch" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train with Me Watch Watch App-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train with Me Watch Watch App-primary.swiftdeps"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me Watch Watch App/ContentView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/ContentView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/ContentView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/ContentView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/ContentView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/ContentView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/ContentView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me Watch Watch App/Train_with_Me_WatchApp.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train_with_Me_WatchApp.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train_with_Me_WatchApp.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train_with_Me_WatchApp.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train_with_Me_WatchApp.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train_with_Me_WatchApp.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train_with_Me_WatchApp.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train_with_Me_WatchApp.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/Train_with_Me_WatchApp~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/GeneratedAssetSymbols.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-watchos/Train with Me Watch Watch App.build/Objects-normal/arm64_32/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

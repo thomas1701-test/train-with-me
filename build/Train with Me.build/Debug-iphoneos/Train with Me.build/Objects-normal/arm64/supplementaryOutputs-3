@@ -1,0 +1,23 @@
+{
+  "/Users/thomas/Developer/Train-neu/Train with Me/HealthManager.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.dia",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.swiftdeps"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/HistoryView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.dia",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.swiftdeps"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/ImageCache.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.dia",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.swiftdeps"
+  }
+}

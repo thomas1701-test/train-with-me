@@ -1,0 +1,239 @@
+{
+  "" : {
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train with Me-primary.dia",
+    "emit-module-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train with Me-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train with Me-primary-emit-module.dia",
+    "pch" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train with Me-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train with Me-primary.swiftdeps"
+  },
+  "/Users/thomas/Developer/Train-neu/Secrets.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Secrets.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Secrets.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Secrets.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Secrets.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Secrets.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Secrets.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Secrets.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Secrets~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/TimerAttributes.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/BodyStatsView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/ContentView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/CreateRoutineView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/FitnessViewModel.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/GamificationView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/HealthManager.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HealthManager~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/HistoryView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/HistoryView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/ImageCache.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ImageCache~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/MachineListView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MachineListView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MachineListView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MachineListView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MachineListView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MachineListView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MachineListView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MachineListView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MachineListView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/Models.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Models.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Models.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Models.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Models.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Models.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Models.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Models.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Models~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/MuscleHeatmapView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MuscleHeatmapView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MuscleHeatmapView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MuscleHeatmapView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MuscleHeatmapView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MuscleHeatmapView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MuscleHeatmapView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MuscleHeatmapView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/MuscleHeatmapView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/NotificationManager.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/NotificationManager.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/NotificationManager.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/NotificationManager.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/NotificationManager.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/NotificationManager.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/NotificationManager.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/NotificationManager.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/NotificationManager~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/PRDashboardView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/PRDashboardView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/PRDashboardView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/PRDashboardView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/PRDashboardView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/PRDashboardView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/PRDashboardView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/PRDashboardView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/PRDashboardView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/RoutineDetailView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/RoutineDetailView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/RoutineDetailView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/RoutineDetailView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/RoutineDetailView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/RoutineDetailView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/RoutineDetailView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/RoutineDetailView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/RoutineDetailView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/SettingsView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SettingsView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SettingsView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SettingsView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SettingsView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SettingsView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SettingsView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SettingsView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SettingsView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/SmartStatsView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SmartStatsView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SmartStatsView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SmartStatsView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SmartStatsView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SmartStatsView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SmartStatsView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SmartStatsView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/SmartStatsView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/Train_with_MeApp.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train_with_MeApp.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train_with_MeApp.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train_with_MeApp.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train_with_MeApp.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train_with_MeApp.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train_with_MeApp.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train_with_MeApp.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/Train_with_MeApp~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/TrainingView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TrainingView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TrainingView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TrainingView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TrainingView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TrainingView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TrainingView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TrainingView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TrainingView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/UIComponents.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/UIComponents.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/UIComponents.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/UIComponents.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/UIComponents.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/UIComponents.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/UIComponents.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/UIComponents.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/UIComponents~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/WorkoutCalendarView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/WorkoutCalendarView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/WorkoutCalendarView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/WorkoutCalendarView.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/WorkoutCalendarView.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/WorkoutCalendarView.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/WorkoutCalendarView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/WorkoutCalendarView.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/WorkoutCalendarView~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

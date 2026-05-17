@@ -1,0 +1,66 @@
+[
+  {
+    "typeName": "TimerWidgetExtension.ConfigurationAppIntent",
+    "mangledTypeName": "20TimerWidgetExtension22ConfigurationAppIntentV",
+    "kind": "struct",
+    "file": "/Users/thomas/Developer/Train-neu/TimerWidget/AppIntent.swift",
+    "line": 11,
+    "conformances": [
+      "AppIntents.WidgetConfigurationIntent",
+      "AppIntents.AppIntent",
+      "AppIntents.PersistentlyIdentifiable",
+      "AppIntents._SupportsAppDependencies",
+      "Swift.Sendable",
+      "Swift.SendableMetatype"
+    ],
+    "allConformances": [
+      {
+        "protocolName": "AppIntents.WidgetConfigurationIntent",
+        "conformanceDefiningModule": "TimerWidgetExtension"
+      },
+      {
+        "protocolName": "AppIntents.AppIntent",
+        "conformanceDefiningModule": "TimerWidgetExtension"
+      },
+      {
+        "protocolName": "AppIntents.PersistentlyIdentifiable",
+        "conformanceDefiningModule": "TimerWidgetExtension"
+      },
+      {
+        "protocolName": "AppIntents._SupportsAppDependencies",
+        "conformanceDefiningModule": "TimerWidgetExtension"
+      },
+      {
+        "protocolName": "Swift.Sendable",
+        "conformanceDefiningModule": "TimerWidgetExtension"
+      },
+      {
+        "protocolName": "Swift.SendableMetatype",
+        "conformanceDefiningModule": "TimerWidgetExtension"
+      }
+    ],
+    "associatedTypeAliases": [],
+    "properties": [
+      {
+        "label": "smiley",
+        "type": "TimerWidgetExtension.ConfigurationAppIntent",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "true",
+        "file": "/Users/thomas/Developer/Train-neu/TimerWidget/TimerWidget.swift",
+        "line": 70,
+        "valueKind": "Runtime"
+      },
+      {
+        "label": "starEyes",
+        "type": "TimerWidgetExtension.ConfigurationAppIntent",
+        "mangledTypeName": "n/a - deprecated",
+        "isStatic": "true",
+        "isComputed": "true",
+        "file": "/Users/thomas/Developer/Train-neu/TimerWidget/TimerWidget.swift",
+        "line": 76,
+        "valueKind": "Runtime"
+      }
+    ]
+  }
+]

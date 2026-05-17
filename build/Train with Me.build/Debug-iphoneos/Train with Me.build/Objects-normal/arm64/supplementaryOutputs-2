@@ -1,0 +1,23 @@
+{
+  "/Users/thomas/Developer/Train-neu/Train with Me/CreateRoutineView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.dia",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/CreateRoutineView.swiftdeps"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/FitnessViewModel.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.dia",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/FitnessViewModel.swiftdeps"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/GamificationView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.dia",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/GamificationView.swiftdeps"
+  }
+}

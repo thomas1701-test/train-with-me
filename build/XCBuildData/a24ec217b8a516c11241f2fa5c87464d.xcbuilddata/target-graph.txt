@@ -1,0 +1,10 @@
+Target dependency graph (5 targets)
+Target 'Train with Me' in project 'Train with Me'
+➜ Explicit dependency on target 'TimerWidgetExtension' in project 'Train with Me'
+➜ Explicit dependency on target 'Train with Me Watch Watch App' in project 'Train with Me'
+➜ Explicit dependency on target 'GoogleGenerativeAI' in project 'generative-ai-swift'
+Target 'GoogleGenerativeAI' in project 'generative-ai-swift'
+➜ Explicit dependency on target 'GoogleGenerativeAI' in project 'generative-ai-swift'
+Target 'GoogleGenerativeAI' in project 'generative-ai-swift' (no dependencies)
+Target 'Train with Me Watch Watch App' in project 'Train with Me' (no dependencies)
+Target 'TimerWidgetExtension' in project 'Train with Me' (no dependencies)

@@ -1,80 +1,67 @@
-//
-//  TimerWidgetLiveActivity.swift
-//  TimerWidget
-//
-//  Created by Thomas on 19.02.26.
-//
-
 import ActivityKit
 import WidgetKit
 import SwiftUI
 
-struct TimerWidgetAttributes: ActivityAttributes {
-    public struct ContentState: Codable, Hashable {
-        // Dynamic stateful properties about your activity go here!
-        var emoji: String
-    }
-
-    // Fixed non-changing properties about your activity go here!
-    var name: String
-}
-
 struct TimerWidgetLiveActivity: Widget {
     var body: some WidgetConfiguration {
-        ActivityConfiguration(for: TimerWidgetAttributes.self) { context in
-            // Lock screen/banner UI goes here
-            VStack {
-                Text("Hello \(context.state.emoji)")
+        ActivityConfiguration(for: TimerAttributes.self) { context in
+            // Das Design für den Sperrbildschirm (Lockscreen)
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("Satz-Pause")
+                        .font(.headline)
+                        .foregroundColor(.green)
+                    Text("Bereit machen für den nächsten Satz!")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                }
+                Spacer()
+                Text("\(context.state.timeRemaining)s")
+                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .foregroundColor(.white)
             }
-            .activityBackgroundTint(Color.cyan)
-            .activitySystemActionForegroundColor(Color.black)
+            .padding()
+            .background(Color.black.opacity(0.8))
+            .cornerRadius(15)
 
         } dynamicIsland: { context in
+            // Das Design für die Dynamic Island oben am Bildschirmrand
             DynamicIsland {
-                // Expanded UI goes here.  Compose the expanded UI through
-                // various regions, like leading/trailing/center/bottom
+                // Wenn man lange auf die Island drückt (Aufgeklappt)
                 DynamicIslandExpandedRegion(.leading) {
-                    Text("Leading")
+                    HStack {
+                        Image(systemName: "timer")
+                            .foregroundColor(.green)
+                        Text("Pause")
+                    }
                 }
                 DynamicIslandExpandedRegion(.trailing) {
-                    Text("Trailing")
+                    Text("\(context.state.timeRemaining)s")
+                        .font(.title2.bold())
+                        .foregroundColor(.green)
                 }
                 DynamicIslandExpandedRegion(.bottom) {
-                    Text("Bottom \(context.state.emoji)")
-                    // more content
+                    ProgressView(
+                        value: Double(context.attributes.totalTime - context.state.timeRemaining),
+                        total: Double(context.attributes.totalTime)
+                    )
+                    .tint(.green)
+                    .padding(.horizontal)
                 }
             } compactLeading: {
-                Text("L")
+                // Kleine Island links (zugeklappt)
+                Image(systemName: "timer")
+                    .foregroundColor(.green)
             } compactTrailing: {
-                Text("T \(context.state.emoji)")
+                // Kleine Island rechts (zugeklappt)
+                Text("\(context.state.timeRemaining)")
+                    .foregroundColor(.green)
+                    .bold()
             } minimal: {
-                Text(context.state.emoji)
+                // Ganz kleine Island (wenn noch was anderes aktiv ist)
+                Text("\(context.state.timeRemaining)")
+                    .foregroundColor(.green)
             }
-            .widgetURL(URL(string: "http://www.apple.com"))
-            .keylineTint(Color.red)
         }
     }
-}
-
-extension TimerWidgetAttributes {
-    fileprivate static var preview: TimerWidgetAttributes {
-        TimerWidgetAttributes(name: "World")
-    }
-}
-
-extension TimerWidgetAttributes.ContentState {
-    fileprivate static var smiley: TimerWidgetAttributes.ContentState {
-        TimerWidgetAttributes.ContentState(emoji: "😀")
-     }
-     
-     fileprivate static var starEyes: TimerWidgetAttributes.ContentState {
-         TimerWidgetAttributes.ContentState(emoji: "🤩")
-     }
-}
-
-#Preview("Notification", as: .content, using: TimerWidgetAttributes.preview) {
-   TimerWidgetLiveActivity()
-} contentStates: {
-    TimerWidgetAttributes.ContentState.smiley
-    TimerWidgetAttributes.ContentState.starEyes
 }

@@ -1,0 +1,104 @@
+{
+  "source": "/Users/thomas/Developer/Train-neu/Train with Me Watch Watch App/ContentView.swift",
+  "tables": {
+    "Localizable": [
+      {
+        "comment": "",
+        "key": "Bitte öffne kurz die App auf dem iPhone, um deine Daten zu laden.",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 61
+        }
+      },
+      {
+        "comment": "",
+        "key": "Keine Geräte angelegt.",
+        "location": {
+          "startingColumn": 30,
+          "startingLine": 104
+        }
+      },
+      {
+        "comment": "",
+        "key": "Dauer (min)",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "Gewicht (kg)",
+        "location": {
+          "startingColumn": 60,
+          "startingLine": 89
+        }
+      },
+      {
+        "comment": "",
+        "key": "Level / km/h",
+        "location": {
+          "startingColumn": 44,
+          "startingLine": 94
+        }
+      },
+      {
+        "comment": "",
+        "key": "Wiederholungen",
+        "location": {
+          "startingColumn": 61,
+          "startingLine": 94
+        }
+      },
+      {
+        "comment": "",
+        "key": "Kategorie",
+        "location": {
+          "startingColumn": 32,
+          "startingLine": 66
+        }
+      },
+      {
+        "comment": "",
+        "key": "Gerät",
+        "location": {
+          "startingColumn": 36,
+          "startingLine": 83
+        }
+      },
+      {
+        "comment": "",
+        "key": "%.1f",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 90
+        }
+      },
+      {
+        "comment": "",
+        "key": "%lld",
+        "location": {
+          "startingColumn": 37,
+          "startingLine": 95
+        }
+      },
+      {
+        "comment": "",
+        "key": "Satz speichern",
+        "location": {
+          "startingColumn": 53,
+          "startingLine": 100
+        }
+      },
+      {
+        "comment": "",
+        "key": "Gespeichert!",
+        "location": {
+          "startingColumn": 26,
+          "startingLine": 112
+        }
+      }
+    ]
+  },
+  "version": 1
+}

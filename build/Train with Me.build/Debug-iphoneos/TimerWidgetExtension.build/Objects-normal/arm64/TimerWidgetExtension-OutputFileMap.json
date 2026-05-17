@@ -1,0 +1,79 @@
+{
+  "" : {
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetExtension-primary.dia",
+    "emit-module-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetExtension-primary-emit-module.d",
+    "emit-module-diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetExtension-primary-emit-module.dia",
+    "pch" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetExtension-primary-Bridging-header.pch",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetExtension-primary.swiftdeps"
+  },
+  "/Users/thomas/Developer/Train-neu/TimerAttributes.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerAttributes.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerAttributes.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerAttributes.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerAttributes.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerAttributes.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerAttributes.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerAttributes.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerAttributes~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/TimerWidget/AppIntent.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/AppIntent.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/AppIntent.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/AppIntent.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/AppIntent.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/AppIntent.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/AppIntent.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/AppIntent.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/AppIntent~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/TimerWidget/TimerWidget.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidget.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidget.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidget.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidget.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidget.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidget.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidget.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidget~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/TimerWidget/TimerWidgetBundle.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetBundle.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetBundle.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetBundle.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetBundle.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetBundle.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetBundle.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetBundle.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetBundle~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/TimerWidget/TimerWidgetControl.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetControl.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetControl.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetControl.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetControl.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetControl.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetControl.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetControl.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetControl~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/TimerWidget/TimerWidgetLiveActivity.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetLiveActivity.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetLiveActivity.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetLiveActivity.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetLiveActivity.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetLiveActivity.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetLiveActivity.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetLiveActivity.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/TimerWidgetLiveActivity~partial.swiftmodule"
+  },
+  "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/DerivedSources/GeneratedAssetSymbols.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.dia",
+    "index-unit-output-path" : "/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "llvm-bc" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.bc",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols.swiftdeps",
+    "swiftmodule" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/TimerWidgetExtension.build/Objects-normal/arm64/GeneratedAssetSymbols~partial.swiftmodule"
+  }
+}

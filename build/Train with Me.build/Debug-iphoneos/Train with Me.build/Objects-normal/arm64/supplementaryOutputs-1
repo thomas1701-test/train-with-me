@@ -1,0 +1,23 @@
+{
+  "/Users/thomas/Developer/Train-neu/TimerAttributes.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.dia",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/TimerAttributes.swiftdeps"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/BodyStatsView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.dia",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/BodyStatsView.swiftdeps"
+  },
+  "/Users/thomas/Developer/Train-neu/Train with Me/ContentView.swift" : {
+    "const-values" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.swiftconstvalues",
+    "dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.d",
+    "diagnostics" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.dia",
+    "object" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.o",
+    "swift-dependencies" : "/Users/thomas/Developer/Train-neu/build/Train with Me.build/Debug-iphoneos/Train with Me.build/Objects-normal/arm64/ContentView.swiftdeps"
+  }
+}
