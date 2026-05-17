@@ -55,9 +55,11 @@ final class CardioWorkoutManager: NSObject {
     private let store = HKHealthStore()
     private var session: HKWorkoutSession?
     private var builder: HKLiveWorkoutBuilder?
+    private var routeBuilder: HKWorkoutRouteBuilder?
     private var locationManager: CLLocationManager?
     private var timer: Timer?
     private var speedSamples: [Double] = []
+    private var collectedLocations: [CLLocation] = []
     private var distanceIdentifier: HKQuantityTypeIdentifier = .distanceWalkingRunning
 
     func requestAuth() {
@@ -66,12 +68,15 @@ final class CardioWorkoutManager: NSObject {
             HKObjectType.quantityType(forIdentifier: .heartRate)!,
             HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
             HKObjectType.quantityType(forIdentifier: .distanceWalkingRunning)!,
-            HKObjectType.workoutType()
+            HKObjectType.workoutType(),
+            HKSeriesType.workoutRoute()
         ]
         if let cycling = HKObjectType.quantityType(forIdentifier: .distanceCycling) {
             share.insert(cycling)
         }
-        store.requestAuthorization(toShare: share, read: share as Set<HKObjectType>) { _, _ in }
+        var read = share as Set<HKObjectType>
+        read.insert(HKSeriesType.workoutRoute())
+        store.requestAuthorization(toShare: share, read: read) { _, _ in }
     }
 
     func start() {
@@ -88,6 +93,7 @@ final class CardioWorkoutManager: NSObject {
         builder.delegate = self
         self.session = session
         self.builder = builder
+        self.routeBuilder = HKWorkoutRouteBuilder(healthStore: store, device: nil)
         let startDate = Date()
         session.startActivity(with: startDate)
         builder.beginCollection(withStart: startDate) { _, _ in }
@@ -96,7 +102,8 @@ final class CardioWorkoutManager: NSObject {
             self.distanceMeters = 0; self.calories = 0; self.currentHR = 0
             self.avgHR = 0; self.maxHR = 0; self.currentSpeedKmh = 0
             self.avgSpeedKmh = 0; self.maxSpeedKmh = 0; self.currentPaceMinKm = 0
-            self.elapsedSeconds = 0; self.speedSamples = []; self.summary = nil
+            self.elapsedSeconds = 0; self.speedSamples = []; self.collectedLocations = []
+            self.summary = nil
             self.startTimer()
             self.startLocation()
         }
@@ -121,6 +128,7 @@ final class CardioWorkoutManager: NSObject {
         locationManager?.stopUpdatingLocation()
         timer?.invalidate(); timer = nil
         isRunning = false; isFinished = true
+
         let s = CardioSummary(
             durationSeconds: elapsedSeconds,
             distanceMeters: distanceMeters,
@@ -132,11 +140,26 @@ final class CardioWorkoutManager: NSObject {
             activityName: selectedActivity.name
         )
         self.summary = s
-        session?.end()
-        builder?.endCollection(withEnd: Date()) { [weak self] _, _ in
-            self?.builder?.finishWorkout { _, _ in }
-        }
         sendResultToPhone(s)
+
+        let endDate = Date()
+        let locationsToSave = collectedLocations
+        let route = routeBuilder
+
+        session?.end()
+        builder?.endCollection(withEnd: endDate) { [weak self] _, _ in
+            self?.builder?.finishWorkout { workout, _ in
+                guard let workout, let route else { return }
+                // Insert all collected GPS locations into the route
+                if !locationsToSave.isEmpty {
+                    route.insertRouteData(locationsToSave) { success, _ in
+                        if success {
+                            route.finishRoute(with: workout, metadata: nil) { _, _ in }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     func reset() {
@@ -163,15 +186,19 @@ final class CardioWorkoutManager: NSObject {
 
     private func startTimer() {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+        // .common mode ensures the timer fires even during scroll/gesture tracking
+        let t = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
             self?.elapsedSeconds += 1
         }
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
     }
 
     private func startLocation() {
         let lm = CLLocationManager()
         lm.delegate = self
         lm.desiredAccuracy = kCLLocationAccuracyBest
+        lm.distanceFilter = 5  // only update every 5 metres to save battery
         lm.requestWhenInUseAuthorization()
         lm.startUpdatingLocation()
         self.locationManager = lm
@@ -221,17 +248,26 @@ extension CardioWorkoutManager: HKLiveWorkoutBuilderDelegate {
 
 extension CardioWorkoutManager: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let loc = locations.last,
-              loc.horizontalAccuracy >= 0,
-              loc.horizontalAccuracy < 50,
-              loc.speed >= 0 else { return }
-        let kmh = loc.speed * 3.6
-        DispatchQueue.main.async {
-            self.currentSpeedKmh = kmh
-            if kmh > 0.5 { self.speedSamples.append(kmh) }
-            if kmh > self.maxSpeedKmh { self.maxSpeedKmh = kmh }
-            self.avgSpeedKmh = self.speedSamples.isEmpty ? 0 : self.speedSamples.reduce(0, +) / Double(self.speedSamples.count)
-            self.currentPaceMinKm = kmh > 0.5 ? 60.0 / kmh : 0
+        // Filter out inaccurate fixes
+        let valid = locations.filter { $0.horizontalAccuracy >= 0 && $0.horizontalAccuracy < 50 }
+        guard !valid.isEmpty else { return }
+
+        // Accumulate for route saving
+        collectedLocations.append(contentsOf: valid)
+
+        // Stream locations into route builder in batches as they arrive
+        routeBuilder?.insertRouteData(valid) { _, _ in }
+
+        // Update live speed display from most recent valid fix
+        if let loc = valid.last, loc.speed >= 0 {
+            let kmh = loc.speed * 3.6
+            DispatchQueue.main.async {
+                self.currentSpeedKmh = kmh
+                if kmh > 0.5 { self.speedSamples.append(kmh) }
+                if kmh > self.maxSpeedKmh { self.maxSpeedKmh = kmh }
+                self.avgSpeedKmh = self.speedSamples.isEmpty ? 0 : self.speedSamples.reduce(0, +) / Double(self.speedSamples.count)
+                self.currentPaceMinKm = kmh > 0.5 ? 60.0 / kmh : 0
+            }
         }
     }
 }
