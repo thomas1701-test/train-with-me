@@ -156,10 +156,14 @@ struct SettingsView: View {
             switch result {
             case .success(let urls):
                 guard let url = urls.first else { return }
-                if let data = try? Data(contentsOf: url) {
-                    viewModel.backup.restoreBackupData(data, training: viewModel.training, health: viewModel.health, ctx: modelContext, healthKitEnabled: viewModel.healthKitEnabled)
+                let accessing = url.startAccessingSecurityScopedResource()
+                defer { if accessing { url.stopAccessingSecurityScopedResource() } }
+                guard let data = try? Data(contentsOf: url) else {
+                    viewModel.errorMessage = "Backup-Datei konnte nicht gelesen werden."
+                    return
                 }
-                if viewModel.errorMessage == nil { showSuccessAlert = true }
+                viewModel.backup.restoreBackupData(data, training: viewModel.training, health: viewModel.health, ctx: modelContext, healthKitEnabled: viewModel.healthKitEnabled)
+                if viewModel.backup.message?.contains("✅") == true { showSuccessAlert = true }
             case .failure(let error):
                 viewModel.errorMessage = "Datei konnte nicht geöffnet werden: \(error.localizedDescription)"
             }
