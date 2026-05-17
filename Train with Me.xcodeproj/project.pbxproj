@@ -74,7 +74,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		F0CC60C1F0B74E0794CA70EB /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Secrets.xcconfig"; path = "Secrets.xcconfig"; sourceTree = "<group>"; };
 		E9DEB64D2F464E58003673E8 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		E9DEB6572F4712EF003673E8 /* TimerWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TimerWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9DEB6582F4712EF003673E8 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
@@ -84,16 +83,10 @@
 		E9E855AA2F327AAC006EB83C /* Train with Me.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Train with Me.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E855BA2F327AB1006EB83C /* Train with MeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Train with MeTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E855C42F327AB1006EB83C /* Train with MeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Train with MeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F0CC60C1F0B74E0794CA70EB /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		E962D2DF2FAFBF7100C05658 /* Exceptions for "Train with Me" folder in "Train with Me" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Untitled.swift,
-			);
-			target = E9E855A92F327AAC006EB83C /* Train with Me */;
-		};
 		E9DEB66D2F4712F0003673E8 /* Exceptions for "TimerWidget" folder in "TimerWidgetExtension" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -119,9 +112,6 @@
 		};
 		E9E855AC2F327AAC006EB83C /* Train with Me */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				E962D2DF2FAFBF7100C05658 /* Exceptions for "Train with Me" folder in "Train with Me" target */,
-			);
 			path = "Train with Me";
 			sourceTree = "<group>";
 		};
@@ -561,12 +551,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Train with Me Watch Watch App/Train with Me Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RVXL7PUD42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Train with Me Watch";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "GPS-Tracking während dem Cardio-Training";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "k.td.Train-with-Me";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -594,12 +586,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Train with Me Watch Watch App/Train with Me Watch Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = RVXL7PUD42;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Train with Me Watch";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "GPS-Tracking während dem Cardio-Training";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "k.td.Train-with-Me";
 				LD_RUNPATH_SEARCH_PATHS = (
