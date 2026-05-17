@@ -94,6 +94,33 @@ final class GeminiService {
         return lines.joined(separator: "\n")
     }
 
+    func generateDailySummary(
+        todayData: [(machine: Machine, sets: [ExerciseSet])],
+        totalVolume: Double,
+        muscles: [String],
+        streak: Int,
+        avgHR: Double?,
+        kcal: Double?
+    ) async -> String {
+        var p = "Du bist motivierender Fitness-Coach. Schreibe eine kurze, persönliche Abend-Zusammenfassung (max. 5 Sätze, lockerer Ton, auf Deutsch, mit 1–2 passenden Emojis).\n\n"
+        p += "HEUTIGES TRAINING:\n"
+        for item in todayData {
+            let maxW = item.sets.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
+            let vol  = item.sets.reduce(0) { $0 + $1.volume }
+            if maxW > 0 { p += "- \(item.machine.name): \(item.sets.count) Sätze, Max \(fmt(maxW)) kg, Vol \(Int(vol)) kg\n" }
+            else if let dur = item.sets.compactMap({ $0.duration }).max() {
+                p += "- \(item.machine.name): beste Haltezeit \(Int(dur))s\n"
+            }
+        }
+        p += "\nVolumen gesamt: \(Int(totalVolume)) kg"
+        p += "\nMuskelgruppen: \(muscles.joined(separator: ", "))"
+        if streak > 1 { p += "\nAktuelle Streak: \(streak) Tage" }
+        if let hr = avgHR { p += "\nØ Herzfrequenz: \(Int(hr)) bpm" }
+        if let k = kcal   { p += "\nVerbrannte Kalorien: \(Int(k)) kcal" }
+        p += "\n\nGib Lob, einen kurzen Fortschritts-Kommentar und eine motivierende Aussicht auf morgen."
+        return await call(prompt: p)
+    }
+
     // MARK: - API Call
 
     private func call(prompt: String) async -> String {

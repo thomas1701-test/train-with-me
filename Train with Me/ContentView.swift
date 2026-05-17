@@ -17,6 +17,7 @@ struct ContentView: View {
     @State private var showingPRDashboard    = false
     @State private var showingCalendar       = false
     @State private var showingGamification   = false
+    @State private var showingDailySummary   = false
     @State private var groupToRename: String? = nil
     @State private var newRenameName         = ""
     @State private var streakMilestone: String? = nil
@@ -57,6 +58,7 @@ struct ContentView: View {
             .sheet(isPresented: $showingPRDashboard)   { PRDashboardView(viewModel: viewModel) }
             .sheet(isPresented: $showingCalendar)      { WorkoutCalendarView(viewModel: viewModel) }
             .sheet(isPresented: $showingGamification)  { NavigationView { GamificationView(viewModel: viewModel) } }
+            .sheet(isPresented: $showingDailySummary)  { DailySummaryView(viewModel: viewModel) }
             .alert("Neue Kategorie", isPresented: $showingAddGroupAlert) {
                 TextField("Name", text: $newGroupName)
                 Button("Hinzufügen") { if !newGroupName.isEmpty { viewModel.training.addMuscleGroup(name: newGroupName); newGroupName = "" } }
@@ -136,6 +138,7 @@ struct ContentView: View {
                         headerButton("figure.arms.open", action: { showingBodyStats = true })
                     }
                     headerButton("calendar",             action: { showingHistory = true })
+                    headerButton("sun.max.fill",         action: { showingDailySummary = true })
                 }
             }
         }.padding(.horizontal)

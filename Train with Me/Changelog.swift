@@ -7,9 +7,20 @@ struct ChangelogEntry {
 }
 
 enum Changelog {
-    static let currentVersion = "1.6.0"
+    static let currentVersion = "1.7.0"
 
     static let entries: [ChangelogEntry] = [
+        ChangelogEntry(
+            version: "1.7.0",
+            date: "17.05.2026",
+            changes: [
+                "Tageszusammenfassung: Abend-Überblick über heutiges Training",
+                "Volumen, Sätze, Kalorien, Herzfrequenz auf einen Blick",
+                "Alle Übungen mit Sätzen und Maximalgewicht aufgelistet",
+                "KI-Motivation: personalisierter Motivationstext von Gemini",
+                "Arztbericht-Export: leere Seite durch SwiftData-Bug behoben"
+            ]
+        ),
         ChangelogEntry(
             version: "1.6.0",
             date: "17.05.2026",
