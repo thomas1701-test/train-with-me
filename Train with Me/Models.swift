@@ -142,7 +142,22 @@ struct OverloadSuggestion {
 
 // MARK: - Chart / UI Models
 
-struct ChartDataPoint: Identifiable, Codable { var id = UUID(); var date: Date; var value: Double }
+struct ChartDataPoint: Identifiable, Codable {
+    var id: UUID
+    var date: Date
+    var value: Double
+
+    init(id: UUID = UUID(), date: Date, value: Double) {
+        self.id = id; self.date = date; self.value = value
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        self.id    = (try? c.decode(UUID.self,   forKey: .id))    ?? UUID()
+        self.date  = try  c.decode(Date.self,    forKey: .date)
+        self.value = try  c.decode(Double.self,  forKey: .value)
+    }
+}
 struct MuscleShare: Identifiable { var id = UUID(); var name: String; var percentage: Double }
 
 enum AppTheme: String, CaseIterable, Identifiable, Codable {
