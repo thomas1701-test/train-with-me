@@ -360,7 +360,7 @@ final class TrainingService {
     // MARK: - Stats
 
     func calculateStats() {
-        var dist: [String: Double] = []; var total = 0.0
+        var dist: [String: Double] = [:]; var total = 0.0
         for m in machines { let v = m.sets.reduce(0) { $0 + $1.volume }; dist[m.muscleGroup, default: 0] += v; total += v }
         muscleShare  = total > 0 ? dist.map { MuscleShare(name: $0.key, percentage: $0.value / total) }.sorted { $0.percentage > $1.percentage } : []
         let d7  = Calendar.current.date(byAdding: .day, value:  -7, to: Date())!
