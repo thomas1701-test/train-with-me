@@ -1,7 +1,7 @@
 import SwiftUI
 import HealthKit
 
-// MARK: - Data Transfer Object
+// MARK: - Plain data structs (no SwiftData access during render)
 
 struct ReportWorkout: Identifiable {
     let id = UUID()
@@ -9,6 +9,20 @@ struct ReportWorkout: Identifiable {
     let activityName: String
     let durationMinutes: Double
     let calories: Double
+}
+
+struct ReportSet {
+    let weight: String
+    let reps: String
+    let date: Date
+    let duration: Double?
+    let volume: Double
+}
+
+struct ReportMachine {
+    let name: String
+    let muscleGroup: String
+    let sets: [ReportSet]
 }
 
 // MARK: - Export UI
@@ -46,7 +60,7 @@ struct MedicalExportView: View {
                         }
 
                         InsightBanner(
-                            emoji: "��",
+                            emoji: "📋",
                             title: "Was ist enthalten?",
                             message: "Alle Krafttrainings mit Übungen, Gewichten und Sätzen. Cardio-Einheiten aus Apple Health. Aktuelle Körperdaten und Blutdruck.",
                             color: .blue
@@ -96,6 +110,16 @@ struct MedicalExportView: View {
     private func generateReport() {
         isGenerating = true
         pdfURL = nil
+
+        // Pre-fetch all SwiftData objects eagerly on the main thread BEFORE rendering
+        let reportMachines: [ReportMachine] = viewModel.training.machines.map { m in
+            let reportSets = m.sets
+                .filter { $0.date >= startDate && $0.date <= Calendar.current.date(byAdding: .day, value: 1, to: endDate)! }
+                .sorted { $0.date < $1.date }
+                .map { s in ReportSet(weight: s.weight, reps: s.reps, date: s.date, duration: s.duration, volume: s.volume) }
+            return ReportMachine(name: m.name, muscleGroup: m.muscleGroup, sets: reportSets)
+        }.filter { !$0.sets.isEmpty }
+
         if viewModel.healthKitEnabled {
             viewModel.health.fetchExternalWorkouts(from: startDate, to: endDate) { workouts in
                 self.externalWorkouts = workouts.map { w in
@@ -106,31 +130,38 @@ struct MedicalExportView: View {
                         calories: w.totalEnergyBurned?.doubleValue(for: .kilocalorie()) ?? 0
                     )
                 }
-                Task { @MainActor in renderAndSave() }
+                Task { @MainActor in self.renderAndSave(machines: reportMachines) }
             }
         } else {
-            Task { @MainActor in renderAndSave() }
+            Task { @MainActor in self.renderAndSave(machines: reportMachines) }
         }
     }
 
     @MainActor
-    private func renderAndSave() {
+    private func renderAndSave(machines: [ReportMachine]) {
         let content = MedicalReportContent(
             startDate: startDate, endDate: endDate,
-            machines: viewModel.training.machines,
+            machines: machines,
             externalWorkouts: externalWorkouts,
             systolic: viewModel.latestSystolic, diastolic: viewModel.latestDiastolic,
             currentWeight: viewModel.health.currentWeight,
             bodyFatLast: viewModel.health.bodyFatHistory.last?.value
         )
-        let renderer = ImageRenderer(content: content)
-        renderer.scale = 2.0
-        renderer.proposedSize = ProposedViewSize(width: 595, height: nil)
-        guard let image = renderer.uiImage else { isGenerating = false; return }
 
-        let pageRect = CGRect(origin: .zero, size: image.size)
-        let pdfRenderer = UIGraphicsPDFRenderer(bounds: pageRect)
-        let data = pdfRenderer.pdfData { ctx in ctx.beginPage(); image.draw(at: .zero) }
+        let renderer = ImageRenderer(content: content)
+        renderer.scale = UIScreen.main.scale
+        renderer.proposedSize = ProposedViewSize(width: 595, height: nil)
+
+        guard let image = renderer.uiImage, image.size.height > 10 else {
+            isGenerating = false; return
+        }
+
+        let pageSize = CGSize(width: image.size.width, height: image.size.height)
+        let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: pageSize))
+        let data = pdfRenderer.pdfData { ctx in
+            ctx.beginPage()
+            image.draw(at: .zero)
+        }
 
         let f = DateFormatter(); f.dateFormat = "yyyy-MM-dd"
         let url = FileManager.default.temporaryDirectory
@@ -141,19 +172,21 @@ struct MedicalExportView: View {
     }
 }
 
-// MARK: - Report Content (rendered to PDF)
+// MARK: - Report Content (rendered to PDF — uses only plain structs, NO SwiftData)
 
 struct MedicalReportContent: View {
     let startDate: Date
     let endDate: Date
-    let machines: [Machine]
+    let machines: [ReportMachine]
     let externalWorkouts: [ReportWorkout]
     let systolic: Double
     let diastolic: Double
     let currentWeight: Double
     let bodyFatLast: Double?
 
-    private static let df: DateFormatter = { let f = DateFormatter(); f.dateFormat = "dd.MM.yyyy"; return f }()
+    private static let df: DateFormatter = {
+        let f = DateFormatter(); f.dateFormat = "dd.MM.yyyy"; return f
+    }()
     private static let sectionFont = Font.system(size: 11, weight: .bold)
     private static let bodyFont    = Font.system(size: 10)
     private static let captionFont = Font.system(size: 9)
@@ -164,42 +197,23 @@ struct MedicalReportContent: View {
     struct DayEntry: Identifiable {
         let id = UUID()
         let date: Date
-        let strengthExercises: [(name: String, group: String, sets: [ExerciseSet])]
+        let strengthExercises: [(name: String, group: String, sets: [ReportSet])]
         let cardioWorkouts: [ReportWorkout]
     }
 
     var dayEntries: [DayEntry] {
         let cal = Calendar.current
-        var strengthMap: [Date: [String: (group: String, sets: [ExerciseSet])]] = [:]
-        var cardioMap:   [Date: [ReportWorkout]] = [:]
+        var strengthByDay: [Date: [(name: String, group: String, sets: [ReportSet])]] = [:]
+        var cardioMap: [Date: [ReportWorkout]] = [:]
 
         for m in machines {
-            for s in m.sets where s.date >= startDate && s.date <= endDate {
-                let day = cal.startOfDay(for: s.date)
-                strengthMap[day, default: [:]][m.id.uuidString, default: (m.muscleGroup, [])].sets.append(s)
-                // preserve name
-                if strengthMap[day]![m.id.uuidString] != nil {
-                    strengthMap[day]![m.id.uuidString]!.sets.sort { $0.date < $1.date }
-                }
+            let daySets = Dictionary(grouping: m.sets) { cal.startOfDay(for: $0.date) }
+            for (day, sets) in daySets {
+                strengthByDay[day, default: []].append((name: m.name, group: m.muscleGroup, sets: sets.sorted { $0.date < $1.date }))
             }
         }
-        // rebuild with machine names
-        var strengthByDay: [Date: [(name: String, group: String, sets: [ExerciseSet])]] = [:]
-        for m in machines {
-            for s in m.sets where s.date >= startDate && s.date <= endDate {
-                let day = cal.startOfDay(for: s.date)
-                if strengthByDay[day] == nil { strengthByDay[day] = [] }
-                if !strengthByDay[day]!.contains(where: { $0.name == m.name }) {
-                    let daySets = m.sets.filter { cal.isDate($0.date, inSameDayAs: day) }
-                        .sorted { $0.date < $1.date }
-                    strengthByDay[day]!.append((name: m.name, group: m.muscleGroup, sets: daySets))
-                }
-            }
-        }
-
         for w in externalWorkouts {
-            let day = cal.startOfDay(for: w.date)
-            cardioMap[day, default: []].append(w)
+            cardioMap[cal.startOfDay(for: w.date), default: []].append(w)
         }
 
         let allDays = Set(strengthByDay.keys).union(Set(cardioMap.keys))
@@ -213,33 +227,28 @@ struct MedicalReportContent: View {
     }
 
     var totalVolume: Double {
-        machines.flatMap { $0.sets }.filter { $0.date >= startDate && $0.date <= endDate }.reduce(0) { $0 + $1.volume }
-    }
-
-    var trainedMuscleGroups: [(group: String, sets: Int)] {
-        var map: [String: Int] = [:]
-        for m in machines {
-            let n = m.sets.filter { $0.date >= startDate && $0.date <= endDate }.count
-            if n > 0 { map[m.muscleGroup, default: 0] += n }
-        }
-        return map.map { (group: $0.key, sets: $0.value) }.sorted { $0.sets > $1.sets }
+        machines.flatMap { $0.sets }.reduce(0) { $0 + $1.volume }
     }
 
     var trainingDays: Int {
         let cal = Calendar.current
         var days = Set<Date>()
-        for m in machines {
-            for s in m.sets where s.date >= startDate && s.date <= endDate {
-                days.insert(cal.startOfDay(for: s.date))
-            }
-        }
-        for w in externalWorkouts { days.insert(cal.startOfDay(for: w.date)) }
+        machines.flatMap { $0.sets }.forEach { days.insert(cal.startOfDay(for: $0.date)) }
+        externalWorkouts.forEach { days.insert(cal.startOfDay(for: $0.date)) }
         return days.count
+    }
+
+    var trainedMuscleGroups: [(group: String, sets: Int)] {
+        var map: [String: Int] = [:]
+        for m in machines { map[m.muscleGroup, default: 0] += m.sets.count }
+        return map.map { (group: $0.key, sets: $0.value) }.sorted { $0.sets > $1.sets }
     }
 
     private func fmt(_ d: Date) -> String { Self.df.string(from: d) }
     private func fmtVol(_ v: Double) -> String {
-        v >= 1000 ? String(format: "%.0f.%03.0f", floor(v / 1000), v.truncatingRemainder(dividingBy: 1000)) : String(format: "%.0f", v)
+        v >= 1000
+            ? String(format: "%.0f.%03.0f", floor(v / 1000), v.truncatingRemainder(dividingBy: 1000))
+            : String(format: "%.0f", v)
     }
     private func fmtW(_ w: Double) -> String {
         w.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(w))" : String(format: "%.1f", w)
@@ -251,12 +260,13 @@ struct MedicalReportContent: View {
         VStack(alignment: .leading, spacing: 0) {
             header
             summarySection
-            dividerLine
+            Rectangle().fill(Color.gray.opacity(0.3)).frame(height: 0.5).padding(.horizontal, 28)
             protocolSection
             footerView
         }
         .frame(width: 595)
         .background(Color.white)
+        .fixedSize(horizontal: true, vertical: true)
     }
 
     // MARK: - Header
@@ -265,9 +275,12 @@ struct MedicalReportContent: View {
         VStack(spacing: 0) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("TRAININGSÜBERSICHT").font(.system(size: 18, weight: .bold)).foregroundColor(Self.accentColor)
-                    Text("Zeitraum: \(fmt(startDate)) �� \(fmt(endDate))").font(Self.bodyFont).foregroundColor(.gray)
-                    Text("Erstellt am: \(fmt(Date()))").font(Self.captionFont).foregroundColor(.gray)
+                    Text("TRAININGSÜBERSICHT")
+                        .font(.system(size: 18, weight: .bold)).foregroundColor(Self.accentColor)
+                    Text("Zeitraum: \(fmt(startDate)) – \(fmt(endDate))")
+                        .font(Self.bodyFont).foregroundColor(.gray)
+                    Text("Erstellt am: \(fmt(Date()))")
+                        .font(Self.captionFont).foregroundColor(.gray)
                 }
                 Spacer()
                 VStack(alignment: .trailing, spacing: 2) {
@@ -284,11 +297,10 @@ struct MedicalReportContent: View {
 
     var summarySection: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("ZUSAMMENFASSUNG").font(Self.sectionFont).foregroundColor(Self.accentColor)
-                .padding(.bottom, 2)
+            Text("ZUSAMMENFASSUNG")
+                .font(Self.sectionFont).foregroundColor(Self.accentColor).padding(.bottom, 2)
 
             HStack(alignment: .top, spacing: 0) {
-                // Left column
                 VStack(alignment: .leading, spacing: 6) {
                     summaryRow("Trainingstage im Zeitraum", value: "\(trainingDays)")
                     summaryRow("Gesamtvolumen (Krafttraining)", value: "\(fmtVol(totalVolume)) kg")
@@ -300,17 +312,11 @@ struct MedicalReportContent: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                // Right column
                 VStack(alignment: .leading, spacing: 6) {
-                    if currentWeight > 0 {
-                        summaryRow("Körpergewicht", value: "\(fmtW(currentWeight)) kg")
-                    }
-                    if let fat = bodyFatLast {
-                        summaryRow("Körperfett", value: "\(fmtW(fat)) %")
-                    }
+                    if currentWeight > 0 { summaryRow("Körpergewicht", value: "\(fmtW(currentWeight)) kg") }
+                    if let fat = bodyFatLast { summaryRow("Körperfett", value: "\(fmtW(fat)) %") }
                     if systolic > 0 {
-                        summaryRow("Blutdruck (letzte Messung)",
-                                   value: "\(Int(systolic))/\(Int(diastolic)) mmHg")
+                        summaryRow("Blutdruck", value: "\(Int(systolic))/\(Int(diastolic)) mmHg")
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -343,43 +349,36 @@ struct MedicalReportContent: View {
                 .font(Self.sectionFont).foregroundColor(Self.accentColor)
                 .padding(.horizontal, 28).padding(.top, 16).padding(.bottom, 8)
 
-            ForEach(dayEntries) { entry in
-                daySection(entry)
+            if dayEntries.isEmpty {
+                Text("Keine Trainingseinheiten im gewählten Zeitraum.")
+                    .font(Self.bodyFont).foregroundColor(.gray)
+                    .padding(.horizontal, 28).padding(.vertical, 12)
+            } else {
+                ForEach(dayEntries) { entry in daySection(entry) }
             }
         }
     }
 
     func daySection(_ entry: DayEntry) -> some View {
         VStack(alignment: .leading, spacing: 0) {
-            // Day header
             HStack(spacing: 0) {
                 Rectangle().fill(Self.accentColor).frame(width: 3)
-                Text(fmt(entry.date)).font(.system(size: 11, weight: .bold)).foregroundColor(.white)
+                Text(fmt(entry.date))
+                    .font(.system(size: 11, weight: .bold)).foregroundColor(.white)
                     .padding(.horizontal, 10).padding(.vertical, 5)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .background(Self.accentColor)
             }
-
             VStack(alignment: .leading, spacing: 8) {
-                // Strength exercises
-                if !entry.strengthExercises.isEmpty {
-                    ForEach(entry.strengthExercises, id: \.name) { exercise in
-                        exerciseBlock(exercise)
-                    }
-                }
-
-                // Cardio workouts
-                ForEach(entry.cardioWorkouts) { w in
-                    cardioBlock(w)
-                }
+                ForEach(entry.strengthExercises, id: \.name) { exerciseBlock($0) }
+                ForEach(entry.cardioWorkouts) { cardioBlock($0) }
             }
             .padding(.horizontal, 28).padding(.vertical, 10)
-
             Divider().padding(.horizontal, 28)
         }
     }
 
-    func exerciseBlock(_ exercise: (name: String, group: String, sets: [ExerciseSet])) -> some View {
+    func exerciseBlock(_ exercise: (name: String, group: String, sets: [ReportSet])) -> some View {
         let strengthSets = exercise.sets.filter { $0.duration == nil }
         let timedSets    = exercise.sets.filter { $0.duration != nil }
         let maxW = strengthSets.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
@@ -390,7 +389,6 @@ struct MedicalReportContent: View {
                 Text(exercise.name).font(.system(size: 10, weight: .semibold)).foregroundColor(.black)
                 Text("(\(exercise.group))").font(Self.captionFont).foregroundColor(.gray)
             }
-
             if !strengthSets.isEmpty {
                 let setStrings = strengthSets.map { s -> String in
                     let w = Double(s.weight.replacingOccurrences(of: ",", with: ".")).map { fmtW($0) } ?? s.weight
@@ -399,13 +397,11 @@ struct MedicalReportContent: View {
                 Text(setStrings.joined(separator: "  |  "))
                     .font(Self.captionFont).foregroundColor(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
-
                 if maxW > 0 {
                     Text("Max: \(fmtW(maxW)) kg  ·  Volumen: \(fmtVol(vol)) kg")
                         .font(Self.captionFont).foregroundColor(.gray)
                 }
             }
-
             if !timedSets.isEmpty {
                 let durs = timedSets.compactMap { $0.duration }.map { s -> String in
                     let sec = Int(s); return sec < 60 ? "\(sec)s" : "\(sec/60):\(String(format: "%02d", sec%60)) min"
@@ -421,15 +417,12 @@ struct MedicalReportContent: View {
             Text("♥").font(.system(size: 10)).foregroundColor(.red)
             VStack(alignment: .leading, spacing: 2) {
                 Text(workout.activityName).font(.system(size: 10, weight: .semibold)).foregroundColor(.black)
-                var parts: [String] = []
-                let _ = {
-                    let m = Int(workout.durationMinutes)
-                    if m > 0 { parts.append("\(m) min") }
-                    if workout.calories > 0 { parts.append("\(Int(workout.calories)) kcal") }
-                }()
+                let parts = [
+                    Int(workout.durationMinutes) > 0 ? "\(Int(workout.durationMinutes)) min" : nil,
+                    workout.calories > 0 ? "\(Int(workout.calories)) kcal" : nil
+                ].compactMap { $0 }
                 if !parts.isEmpty {
-                    Text(parts.joined(separator: "  ·  "))
-                        .font(Self.captionFont).foregroundColor(.secondary)
+                    Text(parts.joined(separator: "  ·  ")).font(Self.captionFont).foregroundColor(.secondary)
                 }
             }
             Spacer()
@@ -439,10 +432,6 @@ struct MedicalReportContent: View {
         .background(Color.red.opacity(0.04))
         .cornerRadius(6)
         .overlay(RoundedRectangle(cornerRadius: 6).stroke(Color.red.opacity(0.15), lineWidth: 0.5))
-    }
-
-    var dividerLine: some View {
-        Rectangle().fill(Color.gray.opacity(0.3)).frame(height: 0.5).padding(.horizontal, 28)
     }
 
     var footerView: some View {
