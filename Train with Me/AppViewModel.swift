@@ -1,6 +1,7 @@
 import SwiftUI
 import SwiftData
 import ActivityKit
+import UIKit
 
 @Observable
 final class AppViewModel {
@@ -61,6 +62,7 @@ final class AppViewModel {
         health.lastWorkoutAvgHR = nil
         health.lastWorkoutMaxHR = nil
         health.lastWorkoutKcal = 0
+        watch.sendWorkoutCommand("startWorkout")
     }
 
     @MainActor func finishWorkout() {
@@ -105,6 +107,7 @@ final class AppViewModel {
             sessionSummaryMessage = "Keine Sätze für heute."
         }
         isWorkoutActive = false; workoutStartDate = nil
+        watch.sendWorkoutCommand("stopWorkout")
         training.calculateStats()
         if let a = training.checkNewAchievements() { newlyUnlockedAchievement = a }
     }
@@ -125,6 +128,37 @@ final class AppViewModel {
     func handleIncomingWatchSet(machineName: String, weight: String, reps: String) {
         guard let m = training.machines.first(where: { $0.name == machineName }) else { return }
         training.addSet(machineId: m.id, weight: weight, reps: reps)
+    }
+
+    func handleIncomingCardioResult(_ result: IncomingCardioResult) {
+        let machineName = "Watch: \(result.activityName)"
+        let durationStr = String(format: "%.1f", result.durationMinutes).replacingOccurrences(of: ".", with: ",")
+        let kcalStr     = String(format: "%.0f", result.calories)
+
+        if let m = training.machines.first(where: { $0.name == machineName && $0.muscleGroup == "Cardio" }) {
+            if !m.sets.contains(where: { abs($0.date.timeIntervalSince(result.date)) < 60 }) {
+                let s = ExerciseSet(weight: durationStr, reps: kcalStr, date: result.date)
+                s.duration = result.durationMinutes
+                s.calories = result.calories
+                m.sets.append(s)
+                if result.avgHR > 0 { health.lastWorkoutAvgHR = result.avgHR }
+                if result.maxHR > 0 { health.lastWorkoutMaxHR = result.maxHR }
+                training.calculateStats()
+            }
+        } else {
+            let id  = UUID()
+            let img = UIImage(color: .darkGray, size: CGSize(width: 400, height: 400)) ?? UIImage()
+            let m   = Machine(id: id, name: machineName, muscleGroup: "Cardio",
+                              imageFileName: training.saveImage(image: img, id: id))
+            let s   = ExerciseSet(weight: durationStr, reps: kcalStr, date: result.date)
+            s.duration = result.durationMinutes
+            s.calories = result.calories
+            m.sets.append(s)
+            training.insertMachine(m)
+            if result.avgHR > 0 { health.lastWorkoutAvgHR = result.avgHR }
+            if result.maxHR > 0 { health.lastWorkoutMaxHR = result.maxHR }
+            training.calculateStats()
+        }
     }
 
     // MARK: - Blood Pressure

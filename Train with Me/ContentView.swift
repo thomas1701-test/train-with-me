@@ -96,6 +96,11 @@ struct ContentView: View {
             viewModel.handleIncomingWatchSet(machineName: s.machineName, weight: s.weight, reps: s.reps)
             viewModel.watch.incomingSet = nil
         }
+        .onChange(of: viewModel.watch.incomingCardioResult) { _, incoming in
+            guard let r = incoming else { return }
+            viewModel.handleIncomingCardioResult(r)
+            viewModel.watch.incomingCardioResult = nil
+        }
     }
 
     // MARK: - Header
