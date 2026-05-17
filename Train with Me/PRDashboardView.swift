@@ -99,12 +99,21 @@ struct PRRow: View {
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 4) {
-                HStack(spacing: 4) {
-                    Image(systemName: "flame.fill").foregroundColor(accentColor).font(.caption)
-                    Text("1RM: \(Int(pr.bestOneRepMax)) kg").font(.headline).foregroundColor(.white)
+                if pr.isAssisted {
+                    HStack(spacing: 4) {
+                        Image(systemName: "arrow.down.circle.fill").foregroundColor(.blue).font(.caption)
+                        Text("Min: \(formatWeight(pr.maxWeight)) kg").font(.headline).foregroundColor(.white)
+                    }
+                    Text("Unterstützungsgerät × \(pr.maxReps) Wdh")
+                        .font(.caption).foregroundColor(.blue.opacity(0.8))
+                } else {
+                    HStack(spacing: 4) {
+                        Image(systemName: "flame.fill").foregroundColor(accentColor).font(.caption)
+                        Text("1RM: \(Int(pr.bestOneRepMax)) kg").font(.headline).foregroundColor(.white)
+                    }
+                    Text("Max: \(formatWeight(pr.maxWeight)) kg × \(pr.maxReps)")
+                        .font(.caption).foregroundColor(.white.opacity(0.6))
                 }
-                Text("Max: \(formatWeight(pr.maxWeight)) kg × \(pr.maxReps)")
-                    .font(.caption).foregroundColor(.white.opacity(0.6))
                 Text(pr.date.formatted(date: .abbreviated, time: .omitted))
                     .font(.caption2).foregroundColor(.white.opacity(0.4))
             }

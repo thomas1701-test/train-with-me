@@ -7,9 +7,20 @@ struct ChangelogEntry {
 }
 
 enum Changelog {
-    static let currentVersion = "1.2.0"
+    static let currentVersion = "1.3.0"
 
     static let entries: [ChangelogEntry] = [
+        ChangelogEntry(
+            version: "1.3.0",
+            date: "17.05.2026",
+            changes: [
+                "Unterstützungsgewicht-Feature: Geräte als Unterstützungsgerät markierbar",
+                "Weniger Unterstützung = Fortschritt (invertierte PR-Logik)",
+                "Toggle in TrainingView, kein x-Mal-aktivieren nötig",
+                "PR-Dashboard zeigt Minimalgewicht statt 1RM für Unterstützungsgeräte",
+                "Progressions-Banner gibt passende Hinweise (Gewicht reduzieren)"
+            ]
+        ),
         ChangelogEntry(
             version: "1.2.0",
             date: "17.05.2026",

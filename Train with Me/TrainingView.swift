@@ -28,6 +28,7 @@ struct TrainingView: View {
 
     var currentMachine: Machine { viewModel.training.machines.first(where: { $0.id == machine.id }) ?? machine }
     var isCardio: Bool { currentMachine.muscleGroup.lowercased() == "cardio" }
+    var isAssisted: Bool { currentMachine.isAssisted }
 
     var chartData: [ChartDataPoint] {
         let grouped = Dictionary(grouping: currentMachine.sets) { Calendar.current.startOfDay(for: $0.date) }
@@ -72,13 +73,25 @@ struct TrainingView: View {
                 ScrollView {
                     VStack(spacing: 20) {
                         // Notizen
-                        VStack(alignment: .leading) {
+                        VStack(alignment: .leading, spacing: 8) {
                             Text("Notizen").font(.caption).foregroundColor(.white)
                             TextField("Einstellungen...", text: $notesInput, onCommit: {
                                 viewModel.training.updateMachineNotes(machineId: currentMachine.id, notes: notesInput)
                             })
                             .textFieldStyle(.plain).padding(10)
                             .background(Color.white.opacity(0.1)).cornerRadius(10).foregroundColor(.white)
+
+                            if !isCardio {
+                                Toggle(isOn: Binding(
+                                    get: { currentMachine.isAssisted },
+                                    set: { viewModel.training.updateMachineAssisted(machineId: currentMachine.id, isAssisted: $0) }
+                                )) {
+                                    HStack(spacing: 6) {
+                                        Image(systemName: "arrow.down.circle.fill").foregroundColor(.blue)
+                                        Text("Unterstützungsgerät").foregroundColor(.white).font(.subheadline)
+                                    }
+                                }.tint(.blue)
+                            }
                         }.padding(.horizontal).onAppear { notesInput = currentMachine.notes }
 
                         // Chart
@@ -108,7 +121,7 @@ struct TrainingView: View {
 
                         // Eingabe
                         HStack {
-                            TextField(isCardio ? "min" : "kg", text: $weight)
+                            TextField(isCardio ? "min" : (isAssisted ? "kg Unterstützung" : "kg"), text: $weight)
                                 .keyboardType(.decimalPad).multilineTextAlignment(.center).padding()
                                 .background(Color.white.opacity(0.1)).cornerRadius(10).foregroundColor(.white)
                             TextField(isCardio ? "Level / Kcal" : "Wdh", text: $reps)
@@ -136,14 +149,18 @@ struct TrainingView: View {
                                             let displayKcal = set.calories.map { String(format: "%.0f", $0) } ?? set.reps
                                             Text("\(displayMin) min").bold()
                                             Text("| \(displayKcal) Kcal").bold()
+                                        } else if isAssisted {
+                                            Image(systemName: "arrow.down.circle.fill").foregroundColor(.blue).font(.caption)
+                                            Text("\(set.weight) kg").bold()
+                                            Text("× \(set.reps)").bold()
                                         } else {
                                             Text("\(set.weight) kg").bold()
-                                            Text("x \(set.reps)").bold()
+                                            Text("× \(set.reps)").bold()
                                         }
                                     }.foregroundColor(.white)
                                 }
                                 Spacer()
-                                if !isCardio { Text("1RM: \(Int(set.oneRepMax))").font(.caption).foregroundColor(viewModel.currentTheme.accentColor) }
+                                if !isCardio && !isAssisted { Text("1RM: \(Int(set.oneRepMax))").font(.caption).foregroundColor(viewModel.currentTheme.accentColor) }
                                 Button(action: {
                                     editRPE = set.rpe ?? 7
                                     editRIR = set.rir ?? 2

@@ -89,6 +89,11 @@ final class TrainingService {
         saveContext()
     }
 
+    func updateMachineAssisted(machineId: UUID, isAssisted: Bool) {
+        machines.first(where: { $0.id == machineId })?.isAssisted = isAssisted
+        saveContext()
+    }
+
     func deleteMachine(machine: Machine) {
         guard let ctx = modelContext else { return }
         deleteImageFile(fileName: machine.imageFileName)
@@ -102,17 +107,30 @@ final class TrainingService {
 
     // MARK: - Set CRUD
 
-    /// Returns true if today's volume is a new personal best for this machine.
+    /// Returns true if today's sets represent a new personal best for this machine.
+    /// For assisted machines: PR = today's min weight < any previous day's min weight.
     @discardableResult
     func addSet(machineId: UUID, weight: String, reps: String) -> Bool {
         guard let m = machines.first(where: { $0.id == machineId }) else { return false }
         m.sets.append(ExerciseSet(weight: weight, reps: reps, date: Date()))
         calculateStats()
-        let todayVol = m.sets.filter { Calendar.current.isDateInToday($0.date) }.reduce(0) { $0 + $1.volume }
-        let bestVol  = Dictionary(grouping: m.sets) { Calendar.current.startOfDay(for: $0.date) }
-            .filter { !Calendar.current.isDateInToday($0.key) }
-            .map { $0.value.reduce(0) { $0 + $1.volume } }.max() ?? 0
-        return todayVol > bestVol && bestVol > 0
+        if m.isAssisted {
+            let cal = Calendar.current
+            let todaySets = m.sets.filter { cal.isDateInToday($0.date) && (Int($0.reps) ?? 0) > 0 }
+            guard let todayMin = todaySets.compactMap({ Double($0.weight.replacingOccurrences(of: ",", with: ".")) }).min() else { return false }
+            let prevMin = Dictionary(grouping: m.sets.filter { (Int($0.reps) ?? 0) > 0 }) { cal.startOfDay(for: $0.date) }
+                .filter { !cal.isDateInToday($0.key) }
+                .compactMap { $0.value.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.min() }
+                .min()
+            guard let prev = prevMin else { return false }
+            return todayMin < prev
+        } else {
+            let todayVol = m.sets.filter { Calendar.current.isDateInToday($0.date) }.reduce(0) { $0 + $1.volume }
+            let bestVol  = Dictionary(grouping: m.sets) { Calendar.current.startOfDay(for: $0.date) }
+                .filter { !Calendar.current.isDateInToday($0.key) }
+                .map { $0.value.reduce(0) { $0 + $1.volume } }.max() ?? 0
+            return todayVol > bestVol && bestVol > 0
+        }
     }
 
     func addCardioSet(machineId: UUID, duration: Double, calories: Double) {
@@ -157,12 +175,28 @@ final class TrainingService {
         let last  = byDay[0].value
         let lastW = last.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
         let lastR = last.compactMap { Int($0.reps) }.max() ?? 0
+
+        if machine.isAssisted {
+            let lastMinW = last.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.min() ?? lastW
+            if byDay.count == 1 {
+                return OverloadSuggestion(lastWeight: lastMinW, lastReps: lastR,
+                    message: "Zuletzt: \(fmt(lastMinW)) kg Unterstützung × \(lastR) – weniger versuchen 🎯")
+            }
+            let prevMinW = byDay[1].value.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.min() ?? 0
+            if lastMinW <= prevMinW && lastR >= 8 {
+                return OverloadSuggestion(lastWeight: lastMinW, lastReps: lastR,
+                    message: "Zuletzt: \(fmt(lastMinW)) kg → heute \(fmt(max(lastMinW - 2.5, 0))) kg Unterstützung versuchen 💡")
+            } else {
+                return OverloadSuggestion(lastWeight: lastMinW, lastReps: lastR,
+                    message: "Zuletzt: \(fmt(lastMinW)) kg Unterstützung × \(lastR)")
+            }
+        }
+
         if byDay.count == 1 {
             return OverloadSuggestion(lastWeight: lastW, lastReps: lastR,
                 message: "Letztes Mal: \(fmt(lastW)) kg × \(lastR) – mehr Wiederholungen versuchen 🎯")
         }
-        let prev  = byDay[1].value
-        let prevW = prev.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
+        let prevW = byDay[1].value.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
         if lastW >= prevW && lastR >= 8 {
             return OverloadSuggestion(lastWeight: lastW, lastReps: lastR,
                 message: "Letztes Mal: \(fmt(lastW)) kg × \(lastR) → heute \(fmt(lastW + 2.5)) kg versuchen 💡")
@@ -329,12 +363,28 @@ final class TrainingService {
     var personalRecords: [PersonalRecord] {
         machines.compactMap { m in
             guard !m.sets.isEmpty else { return nil }
-            let best = m.sets.max(by: { $0.oneRepMax < $1.oneRepMax })!
-            let maxW = m.sets.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
-            let maxR = m.sets.compactMap { Int($0.reps) }.max() ?? 0
-            return PersonalRecord(machineName: m.name, muscleGroup: m.muscleGroup,
-                                  maxWeight: maxW, maxReps: maxR, bestOneRepMax: best.oneRepMax, date: best.date)
-        }.sorted { $0.bestOneRepMax > $1.bestOneRepMax }
+            if m.isAssisted {
+                let valid = m.sets.filter { (Int($0.reps) ?? 0) > 0 }
+                guard !valid.isEmpty else { return nil }
+                let minW = valid.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.min() ?? 0
+                let best = valid.min(by: {
+                    (Double($0.weight.replacingOccurrences(of: ",", with: ".")) ?? .infinity) <
+                    (Double($1.weight.replacingOccurrences(of: ",", with: ".")) ?? .infinity)
+                })!
+                return PersonalRecord(machineName: m.name, muscleGroup: m.muscleGroup, isAssisted: true,
+                                      maxWeight: minW, maxReps: Int(best.reps) ?? 0, bestOneRepMax: 0, date: best.date)
+            } else {
+                let best = m.sets.max(by: { $0.oneRepMax < $1.oneRepMax })!
+                let maxW = m.sets.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
+                let maxR = m.sets.compactMap { Int($0.reps) }.max() ?? 0
+                return PersonalRecord(machineName: m.name, muscleGroup: m.muscleGroup, isAssisted: false,
+                                      maxWeight: maxW, maxReps: maxR, bestOneRepMax: best.oneRepMax, date: best.date)
+            }
+        }.sorted {
+            if $0.isAssisted != $1.isAssisted { return !$0.isAssisted }
+            if $0.isAssisted { return $0.maxWeight < $1.maxWeight }
+            return $0.bestOneRepMax > $1.bestOneRepMax
+        }
     }
 
     // MARK: - Calendar
@@ -412,7 +462,7 @@ final class TrainingService {
         var newM: [Machine] = []
         for md in ml {
             let m = Machine(id: md.id, name: md.name, muscleGroup: md.muscleGroup,
-                            imageFileName: md.imageFileName, notes: md.notes)
+                            imageFileName: md.imageFileName, notes: md.notes, isAssisted: md.isAssisted ?? false)
             for sd in md.sets { m.sets.append(ExerciseSet(id: sd.id, weight: sd.weight, reps: sd.reps, date: sd.date)) }
             ctx.insert(m); newM.append(m)
         }
