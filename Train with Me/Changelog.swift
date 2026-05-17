@@ -7,9 +7,20 @@ struct ChangelogEntry {
 }
 
 enum Changelog {
-    static let currentVersion = "1.4.0"
+    static let currentVersion = "1.5.0"
 
     static let entries: [ChangelogEntry] = [
+        ChangelogEntry(
+            version: "1.5.0",
+            date: "17.05.2026",
+            changes: [
+                "Arztbericht-Export: PDF mit konfigurierbarem Zeitraum",
+                "Zusammenfassung mit Volumen, Trainingstagen, Muskelgruppen, Körperdaten",
+                "Vollständiges Trainingsprotokoll: alle Übungen mit Gewichten und Sätzen",
+                "Cardio-Einheiten aus Apple Health sind im Bericht enthalten",
+                "Bericht per ShareSheet teilen oder drucken"
+            ]
+        ),
         ChangelogEntry(
             version: "1.4.0",
             date: "17.05.2026",

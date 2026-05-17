@@ -125,6 +125,20 @@ final class HealthService {
         store.execute(query)
     }
 
+    /// Fetches non-strength workouts (cardio, running, cycling…) from HealthKit for the given date range.
+    /// Excludes .traditionalStrengthTraining which the app itself saves.
+    func fetchExternalWorkouts(from startDate: Date, to endDate: Date, completion: @escaping ([HKWorkout]) -> Void) {
+        let pred = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
+        let sort = NSSortDescriptor(key: HKSampleSortIdentifierStartDate, ascending: true)
+        let query = HKSampleQuery(sampleType: .workoutType(), predicate: pred,
+                                  limit: HKObjectQueryNoLimit, sortDescriptors: [sort]) { _, samples, _ in
+            let workouts = (samples as? [HKWorkout] ?? [])
+                .filter { $0.workoutActivityType != .traditionalStrengthTraining }
+            DispatchQueue.main.async { completion(workouts) }
+        }
+        store.execute(query)
+    }
+
     // MARK: - HealthKit Write
 
     func saveWorkout(startDate: Date, endDate: Date, totalVolume: Double,

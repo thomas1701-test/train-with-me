@@ -10,6 +10,7 @@ struct SettingsView: View {
     @State private var backupDocument  = BackupDocument(fileURL: URL(fileURLWithPath: ""))
     @State private var showSuccessAlert = false
     @State private var durationString  = ""
+    @State private var showMedicalExport = false
 
     var body: some View {
         ZStack {
@@ -76,6 +77,13 @@ struct SettingsView: View {
                             showSuccessAlert = true
                         }) {
                             Label("Uhr manuell synchronisieren", systemImage: "applewatch").foregroundColor(.white)
+                        }
+                    }
+
+                    GlassSection(title: "Arzt & Export") {
+                        Button(action: { showMedicalExport = true }) {
+                            Label("Arztbericht erstellen", systemImage: "doc.text.magnifyingglass")
+                                .foregroundColor(.white)
                         }
                     }
 
@@ -156,6 +164,7 @@ struct SettingsView: View {
                 viewModel.errorMessage = "Datei konnte nicht geöffnet werden: \(error.localizedDescription)"
             }
         }
+        .sheet(isPresented: $showMedicalExport) { MedicalExportView(viewModel: viewModel) }
         // Erfolgs-Alert (getrennt vom Fehler-Alert in ContentView)
         .alert("Erfolg", isPresented: $showSuccessAlert) {
             Button("OK") { showSuccessAlert = false }
