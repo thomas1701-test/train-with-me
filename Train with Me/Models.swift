@@ -85,9 +85,9 @@ struct BackupData: Codable {
     let weightHistory: [ChartDataPoint]?; let waistHistory: [ChartDataPoint]?
     let bodyFatHistory: [ChartDataPoint]?; let bicepsHistory: [ChartDataPoint]?
     let chestHistory: [ChartDataPoint]?; let thighHistory: [ChartDataPoint]?
-    let imagesData: [String: Data]
+    let imagesData: [String: Data]?
 }
-struct LegacyBackupData: Codable { let machines: [MachineData]; let muscleGroups: [String]; let imagesData: [String: Data] }
+struct LegacyBackupData: Codable { let machines: [MachineData]; let muscleGroups: [String]; let imagesData: [String: Data]? }
 
 // MARK: - Feature Support Types
 

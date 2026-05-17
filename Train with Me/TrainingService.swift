@@ -510,7 +510,7 @@ final class TrainingService {
     // MARK: - Bulk Replace (used by BackupService restore)
 
     func replaceAll(machines ml: [MachineData], routines rl: [RoutineData], muscleGroups gl: [String],
-                    imgs: [String: Data], ctx: ModelContext) {
+                    imgs: [String: Data]?, ctx: ModelContext) {
         machines.forEach  { ctx.delete($0) }
         routines.forEach  { ctx.delete($0) }
         muscleGroups.forEach { ctx.delete($0) }
@@ -530,7 +530,7 @@ final class TrainingService {
 
         self.machines = newM; self.routines = newR; self.muscleGroups = newG
 
-        for (f, d) in imgs { try? d.write(to: documentsURL.appendingPathComponent(f)); ImageCache.shared.remove(f) }
+        for (f, d) in (imgs ?? [:]) { try? d.write(to: documentsURL.appendingPathComponent(f)); ImageCache.shared.remove(f) }
         ensureDefaultGroups(); calculateStats(); try? ctx.save()
     }
 

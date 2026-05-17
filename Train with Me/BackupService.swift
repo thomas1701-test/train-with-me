@@ -44,17 +44,22 @@ final class BackupService {
 
     func restoreBackupData(_ data: Data, training: TrainingService, health: HealthService,
                            ctx: ModelContext, healthKitEnabled: Bool) {
-        if let b = try? JSONDecoder().decode(BackupData.self, from: data) {
+        do {
+            // Default decoder: dates as TimeInterval since reference date (Jan 1 2001) — matches JSONEncoder default
+            let b = try JSONDecoder().decode(BackupData.self, from: data)
             training.replaceAll(machines: b.machines, routines: b.routines ?? [],
                                 muscleGroups: b.muscleGroups, imgs: b.imagesData, ctx: ctx)
             restoreBodyData(b, health: health, ctx: ctx, healthKitEnabled: healthKitEnabled)
             message = "Backup importiert! ✅"
-        } else if let b = try? JSONDecoder().decode(LegacyBackupData.self, from: data) {
-            training.replaceAll(machines: b.machines, routines: [],
-                                muscleGroups: b.muscleGroups, imgs: b.imagesData, ctx: ctx)
-            message = "Legacy-Backup importiert! ✅"
-        } else {
-            message = "Unbekanntes Backup-Format."
+        } catch let primaryError {
+            if let b = try? JSONDecoder().decode(LegacyBackupData.self, from: data) {
+                training.replaceAll(machines: b.machines, routines: [],
+                                    muscleGroups: b.muscleGroups, imgs: b.imagesData, ctx: ctx)
+                message = "Backup importiert! ✅"
+            } else {
+                // Show the exact decode error so we can diagnose
+                message = "Import fehlgeschlagen: \(primaryError)"
+            }
         }
     }
 
