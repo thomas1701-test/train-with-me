@@ -1,3 +1,5 @@
+import Foundation
+import Observation
 import GoogleGenerativeAI
 
 @Observable
