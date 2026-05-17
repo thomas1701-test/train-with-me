@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDisplayName</key>
+	<string>Train with Me Watch</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>um Herzfrequenz und Workout-Daten während dem Training zu lesen.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>um Workouts und Trainingseinheiten in Apple Health zu speichern.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>GPS-Tracking während dem Cardio-Training für Distanz und Tempo.</string>
+	<key>WKCompanionAppBundleIdentifier</key>
+	<string>k.td.Train-with-Me</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
+</dict>
+</plist>
