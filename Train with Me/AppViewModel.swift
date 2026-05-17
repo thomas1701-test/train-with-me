@@ -58,6 +58,9 @@ final class AppViewModel {
     func startWorkout() {
         isWorkoutActive = true
         workoutStartDate = Date()
+        health.lastWorkoutAvgHR = nil
+        health.lastWorkoutMaxHR = nil
+        health.lastWorkoutKcal = 0
     }
 
     @MainActor func finishWorkout() {
@@ -72,7 +75,28 @@ final class AppViewModel {
             let r = ImageRenderer(content: ShareView(volume: Int(vol), muscles: muscles.joined(separator: ", ")))
             r.scale = 3.0; shareImage = r.uiImage
             if healthKitEnabled, let start = workoutStartDate {
-                health.saveWorkout(startDate: start, endDate: end, totalVolume: vol)
+                // Collect exercise data for HealthKit
+                let exerciseData = todayData.map { item -> (name: String, maxWeight: Double) in
+                    let maxW = item.sets.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
+                    return (name: item.machine.name, maxWeight: maxW)
+                }
+                let muscleList = Array(muscles)
+                let totalSets = todayData.reduce(0) { $0 + $1.sets.count }
+
+                health.saveWorkout(startDate: start, endDate: end, totalVolume: vol,
+                                   muscles: muscleList, exercises: exerciseData, totalSets: totalSets)
+
+                // Fetch HR from Apple Watch if available
+                let workoutStart = start
+                health.fetchHeartRate(from: workoutStart, to: end) { [weak self] avg, max in
+                    self?.health.lastWorkoutAvgHR = avg
+                    self?.health.lastWorkoutMaxHR = max
+                }
+
+                // Store estimated kcal for display
+                let hours = end.timeIntervalSince(start) / 3600
+                let bodyWeight = health.currentWeight > 0 ? health.currentWeight : 80.0
+                health.lastWorkoutKcal = max(5.0 * bodyWeight * hours, vol * 0.06)
             }
             if !todayData.isEmpty {
                 Task { await analyzeCompletedWorkout(todaysSets: todayData) }

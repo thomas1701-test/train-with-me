@@ -336,6 +336,25 @@ struct EndWorkoutSheet: View {
                     VStack(spacing: 8) {
                         Text("Training beendet!").font(.largeTitle.bold()).foregroundColor(.white)
                         Text(viewModel.sessionSummaryMessage ?? "").foregroundColor(.white.opacity(0.6)).multilineTextAlignment(.center)
+                        // Health stats row
+                        HStack(spacing: 20) {
+                            if viewModel.health.lastWorkoutKcal > 0 {
+                                Label("\(Int(viewModel.health.lastWorkoutKcal)) kcal", systemImage: "flame.fill")
+                                    .font(.subheadline.bold())
+                                    .foregroundColor(.orange)
+                            }
+                            if let avg = viewModel.health.lastWorkoutAvgHR {
+                                Label("\(Int(avg)) bpm", systemImage: "heart.fill")
+                                    .font(.subheadline.bold())
+                                    .foregroundColor(.red)
+                            }
+                            if let max = viewModel.health.lastWorkoutMaxHR {
+                                Label("max \(Int(max))", systemImage: "heart.circle.fill")
+                                    .font(.caption)
+                                    .foregroundColor(.red.opacity(0.7))
+                            }
+                        }
+                        .padding(.top, 4)
                     }.padding(.top, 24)
                     if let img = viewModel.shareImage {
                         VStack(spacing: 12) {
