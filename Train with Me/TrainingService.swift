@@ -510,7 +510,8 @@ final class TrainingService {
     // MARK: - Bulk Replace (used by BackupService restore)
 
     func replaceAll(machines ml: [MachineData], routines rl: [RoutineData], muscleGroups gl: [String],
-                    imgs: [String: Data]?, ctx: ModelContext) {
+                    imgs: [String: Data]?) throws {
+        guard let ctx = modelContext else { return }
         machines.forEach  { ctx.delete($0) }
         routines.forEach  { ctx.delete($0) }
         muscleGroups.forEach { ctx.delete($0) }
@@ -519,8 +520,13 @@ final class TrainingService {
         for md in ml {
             let m = Machine(id: md.id, name: md.name, muscleGroup: md.muscleGroup,
                             imageFileName: md.imageFileName, notes: md.notes ?? "", isAssisted: md.isAssisted ?? false, isTimed: md.isTimed ?? false)
-            for sd in md.sets { m.sets.append(ExerciseSet(id: sd.id ?? UUID(), weight: sd.weight, reps: sd.reps, date: sd.date)) }
-            ctx.insert(m); newM.append(m)
+            ctx.insert(m)
+            for sd in md.sets {
+                let s = ExerciseSet(id: sd.id ?? UUID(), weight: sd.weight, reps: sd.reps, date: sd.date)
+                ctx.insert(s)
+                m.sets.append(s)
+            }
+            newM.append(m)
         }
         var newR: [Routine] = []
         for rd in rl { let r = Routine(id: rd.id, name: rd.name, machineIDs: rd.machineIDs); ctx.insert(r); newR.append(r) }
@@ -531,7 +537,8 @@ final class TrainingService {
         self.machines = newM; self.routines = newR; self.muscleGroups = newG
 
         for (f, d) in (imgs ?? [:]) { try? d.write(to: documentsURL.appendingPathComponent(f)); ImageCache.shared.remove(f) }
-        ensureDefaultGroups(); calculateStats(); try? ctx.save()
+        ensureDefaultGroups(); calculateStats()
+        try ctx.save()
     }
 
     // MARK: - Helpers

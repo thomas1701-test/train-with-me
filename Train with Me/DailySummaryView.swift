@@ -19,7 +19,9 @@ struct DailySummaryView: View {
     }
 
     var totalVolume: Double {
-        todayMachines.flatMap { $0.sets }.reduce(0) { $0 + $1.volume }
+        let strengthMachines = todayMachines.filter { $0.machine.muscleGroup.lowercased() != "cardio" }
+        let sets = strengthMachines.flatMap { $0.sets }.filter { $0.duration == nil }
+        return sets.reduce(0) { $0 + $1.volume }
     }
 
     var totalSets: Int {
@@ -116,21 +118,30 @@ struct DailySummaryView: View {
             VStack(spacing: 10) {
                 ForEach(todayMachines, id: \.machine.id) { item in
                     HStack(alignment: .top, spacing: 12) {
-                        Image(systemName: item.machine.muscleGroup.lowercased() == "cardio" ? "figure.run" : "dumbbell.fill")
+                        let isCardio = item.machine.muscleGroup.lowercased() == "cardio"
+                        Image(systemName: isCardio ? "figure.run" : "dumbbell.fill")
                             .font(.caption).foregroundColor(.white.opacity(0.5))
                             .frame(width: 20)
                         VStack(alignment: .leading, spacing: 3) {
                             Text(item.machine.name)
                                 .font(.subheadline.bold()).foregroundColor(.white)
-                            Text(setsSummary(item.sets))
+                            Text(setsSummary(item.sets, isCardio: isCardio))
                                 .font(.caption).foregroundColor(.white.opacity(0.6))
                                 .lineLimit(2)
                         }
                         Spacer()
-                        let vol = item.sets.reduce(0) { $0 + $1.volume }
-                        if vol > 0 {
-                            Text("\(Int(vol)) kg")
-                                .font(.caption.bold()).foregroundColor(.green)
+                        if isCardio {
+                            let totalMin = item.sets.compactMap { $0.duration }.reduce(0, +)
+                            if totalMin > 0 {
+                                Text("\(Int(totalMin)) min")
+                                    .font(.caption.bold()).foregroundColor(.orange)
+                            }
+                        } else {
+                            let vol = item.sets.filter { $0.duration == nil }.reduce(0) { $0 + $1.volume }
+                            if vol > 0 {
+                                Text("\(Int(vol)) kg")
+                                    .font(.caption.bold()).foregroundColor(.green)
+                            }
                         }
                     }
                     if item.machine.id != todayMachines.last?.machine.id {
@@ -141,7 +152,15 @@ struct DailySummaryView: View {
         }
     }
 
-    private func setsSummary(_ sets: [ExerciseSet]) -> String {
+    private func setsSummary(_ sets: [ExerciseSet], isCardio: Bool = false) -> String {
+        if isCardio {
+            let totalMin = sets.compactMap { $0.duration }.reduce(0, +)
+            let kcal = sets.compactMap { $0.calories }.reduce(0, +)
+            var parts: [String] = []
+            if totalMin > 0 { parts.append("\(Int(totalMin)) min") }
+            if kcal > 0 { parts.append("\(Int(kcal)) kcal") }
+            return parts.joined(separator: "  ·  ")
+        }
         let strength = sets.filter { $0.duration == nil }
         let timed    = sets.filter { $0.duration != nil }
         var parts: [String] = []

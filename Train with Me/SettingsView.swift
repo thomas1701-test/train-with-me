@@ -3,7 +3,6 @@ import SwiftUI
 struct SettingsView: View {
     @Bindable var viewModel: AppViewModel
     @Environment(\.presentationMode) var presentationMode
-    @Environment(\.modelContext) private var modelContext
 
     @State private var showExporter    = false
     @State private var showImporter    = false
@@ -162,7 +161,7 @@ struct SettingsView: View {
                     viewModel.errorMessage = "Backup-Datei konnte nicht gelesen werden."
                     return
                 }
-                viewModel.backup.restoreBackupData(data, training: viewModel.training, health: viewModel.health, ctx: modelContext, healthKitEnabled: viewModel.healthKitEnabled)
+                viewModel.backup.restoreBackupData(data, training: viewModel.training, health: viewModel.health, healthKitEnabled: viewModel.healthKitEnabled)
                 if viewModel.backup.message?.contains("✅") == true { showSuccessAlert = true }
             case .failure(let error):
                 viewModel.errorMessage = "Datei konnte nicht geöffnet werden: \(error.localizedDescription)"

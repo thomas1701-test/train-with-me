@@ -244,6 +244,27 @@ final class HealthService {
         }
     }
 
+    func restoreBodyMeasurements(from b: BackupData) throws {
+        guard let ctx = modelContext else { return }
+        let existing = (try? ctx.fetch(FetchDescriptor<BodyMeasurement>())) ?? []
+        existing.forEach { ctx.delete($0) }
+        func insert(_ type: String, _ points: [ChartDataPoint]?) {
+            for p in (points ?? []) { ctx.insert(BodyMeasurement(date: p.date, type: type, value: p.value)) }
+        }
+        insert("weight",  b.weightHistory);  insert("waist",   b.waistHistory)
+        insert("bodyFat", b.bodyFatHistory); insert("biceps",  b.bicepsHistory)
+        insert("chest",   b.chestHistory);   insert("thigh",   b.thighHistory)
+        try ctx.save()
+        let all = (try? ctx.fetch(FetchDescriptor<BodyMeasurement>(sortBy: [SortDescriptor(\.date)]))) ?? []
+        weightHistory  = all.filter { $0.type == "weight"  }.map { ChartDataPoint(date: $0.date, value: $0.value) }
+        waistHistory   = all.filter { $0.type == "waist"   }.map { ChartDataPoint(date: $0.date, value: $0.value) }
+        bodyFatHistory = all.filter { $0.type == "bodyFat" }.map { ChartDataPoint(date: $0.date, value: $0.value) }
+        bicepsHistory  = all.filter { $0.type == "biceps"  }.map { ChartDataPoint(date: $0.date, value: $0.value) }
+        chestHistory   = all.filter { $0.type == "chest"   }.map { ChartDataPoint(date: $0.date, value: $0.value) }
+        thighHistory   = all.filter { $0.type == "thigh"   }.map { ChartDataPoint(date: $0.date, value: $0.value) }
+        currentWeight  = weightHistory.last?.value ?? currentWeight
+    }
+
     func refreshFromHealthKit() {
         fetchHistory(for: .bodyMass,          unit: .gramUnit(with: .kilo))    { [weak self] p in self?.weightHistory  = p; self?.currentWeight = p.last?.value ?? self?.currentWeight ?? 0 }
         fetchHistory(for: .waistCircumference, unit: .meterUnit(with: .centi)) { [weak self] p in self?.waistHistory   = p }

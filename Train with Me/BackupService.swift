@@ -1,6 +1,5 @@
 import UIKit
 import HealthKit
-import SwiftData
 
 @Observable
 final class BackupService {
@@ -43,45 +42,26 @@ final class BackupService {
     // MARK: - Backup Import
 
     func restoreBackupData(_ data: Data, training: TrainingService, health: HealthService,
-                           ctx: ModelContext, healthKitEnabled: Bool) {
+                           healthKitEnabled: Bool) {
         do {
-            // Default decoder: dates as TimeInterval since reference date (Jan 1 2001) — matches JSONEncoder default
             let b = try JSONDecoder().decode(BackupData.self, from: data)
-            training.replaceAll(machines: b.machines, routines: b.routines ?? [],
-                                muscleGroups: b.muscleGroups, imgs: b.imagesData, ctx: ctx)
-            restoreBodyData(b, health: health, ctx: ctx, healthKitEnabled: healthKitEnabled)
+            try training.replaceAll(machines: b.machines, routines: b.routines ?? [],
+                                    muscleGroups: b.muscleGroups, imgs: b.imagesData)
+            try health.restoreBodyMeasurements(from: b)
             message = "Backup importiert! ✅"
         } catch let primaryError {
             if let b = try? JSONDecoder().decode(LegacyBackupData.self, from: data) {
-                training.replaceAll(machines: b.machines, routines: [],
-                                    muscleGroups: b.muscleGroups, imgs: b.imagesData, ctx: ctx)
-                message = "Backup importiert! ✅"
+                do {
+                    try training.replaceAll(machines: b.machines, routines: [],
+                                            muscleGroups: b.muscleGroups, imgs: b.imagesData)
+                    message = "Backup importiert! ✅"
+                } catch {
+                    message = "Import fehlgeschlagen: \(error)"
+                }
             } else {
-                // Show the exact decode error so we can diagnose
                 message = "Import fehlgeschlagen: \(primaryError)"
             }
         }
-    }
-
-    private func restoreBodyData(_ b: BackupData, health: HealthService,
-                                  ctx: ModelContext, healthKitEnabled: Bool) {
-        let existing = (try? ctx.fetch(FetchDescriptor<BodyMeasurement>())) ?? []
-        existing.forEach { ctx.delete($0) }
-        func insert(_ type: String, _ points: [ChartDataPoint]?) {
-            for p in (points ?? []) { ctx.insert(BodyMeasurement(date: p.date, type: type, value: p.value)) }
-        }
-        insert("weight",  b.weightHistory);  insert("waist",   b.waistHistory)
-        insert("bodyFat", b.bodyFatHistory); insert("biceps",  b.bicepsHistory)
-        insert("chest",   b.chestHistory);   insert("thigh",   b.thighHistory)
-        try? ctx.save()
-        let all = (try? ctx.fetch(FetchDescriptor<BodyMeasurement>(sortBy: [SortDescriptor(\.date)]))) ?? []
-        health.weightHistory  = all.filter { $0.type == "weight"  }.map { ChartDataPoint(date: $0.date, value: $0.value) }
-        health.waistHistory   = all.filter { $0.type == "waist"   }.map { ChartDataPoint(date: $0.date, value: $0.value) }
-        health.bodyFatHistory = all.filter { $0.type == "bodyFat" }.map { ChartDataPoint(date: $0.date, value: $0.value) }
-        health.bicepsHistory  = all.filter { $0.type == "biceps"  }.map { ChartDataPoint(date: $0.date, value: $0.value) }
-        health.chestHistory   = all.filter { $0.type == "chest"   }.map { ChartDataPoint(date: $0.date, value: $0.value) }
-        health.thighHistory   = all.filter { $0.type == "thigh"   }.map { ChartDataPoint(date: $0.date, value: $0.value) }
-        health.currentWeight  = health.weightHistory.last?.value ?? health.currentWeight
     }
 
     // MARK: - CSV Export
