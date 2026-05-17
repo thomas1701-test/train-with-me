@@ -164,23 +164,63 @@ enum AppTheme: String, CaseIterable, Identifiable, Codable {
     case midnight = "Midnight"; case beast = "Beast Mode"; case sunset = "Sunset"; case ocean = "Ocean"
     var id: String { rawValue }
     var accentColor: Color {
-        switch self { case .midnight: return .blue; case .beast: return .red; case .sunset: return .pink; case .ocean: return .cyan }
+        switch self {
+        case .midnight: return Color(red: 0.45, green: 0.55, blue: 1.0)
+        case .beast:    return Color(red: 1.0,  green: 0.25, blue: 0.25)
+        case .sunset:   return Color(red: 1.0,  green: 0.5,  blue: 0.2)
+        case .ocean:    return Color(red: 0.2,  green: 0.85, blue: 1.0)
+        }
+    }
+    var accentGradient: LinearGradient {
+        switch self {
+        case .midnight: return LinearGradient(colors: [Color(red:0.4,green:0.5,blue:1.0), Color(red:0.6,green:0.3,blue:1.0)], startPoint: .leading, endPoint: .trailing)
+        case .beast:    return LinearGradient(colors: [Color(red:1.0,green:0.2,blue:0.2), Color(red:1.0,green:0.5,blue:0.0)], startPoint: .leading, endPoint: .trailing)
+        case .sunset:   return LinearGradient(colors: [Color(red:1.0,green:0.4,blue:0.1), Color(red:1.0,green:0.2,blue:0.5)], startPoint: .leading, endPoint: .trailing)
+        case .ocean:    return LinearGradient(colors: [Color(red:0.0,green:0.8,blue:1.0), Color(red:0.0,green:0.5,blue:0.9)], startPoint: .leading, endPoint: .trailing)
+        }
     }
     @ViewBuilder var backgroundView: some View {
         switch self {
         case .midnight:
-            ZStack { Color.black.ignoresSafeArea()
-                LinearGradient(colors: [Color(red:0.1,green:0.1,blue:0.3), Color.purple.opacity(0.5)], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea() }
+            MeshGradient(width: 3, height: 3, points: [
+                [0.0, 0.0], [0.5, 0.0], [1.0, 0.0],
+                [0.0, 0.5], [0.6, 0.4], [1.0, 0.5],
+                [0.0, 1.0], [0.5, 1.0], [1.0, 1.0]
+            ], colors: [
+                Color(red:0.04,green:0.02,blue:0.12), Color(red:0.08,green:0.04,blue:0.20), Color(red:0.02,green:0.02,blue:0.10),
+                Color(red:0.10,green:0.05,blue:0.25), Color(red:0.18,green:0.06,blue:0.38), Color(red:0.06,green:0.03,blue:0.18),
+                Color(red:0.02,green:0.02,blue:0.08), Color(red:0.08,green:0.04,blue:0.18), Color(red:0.04,green:0.02,blue:0.10)
+            ]).ignoresSafeArea()
         case .beast:
-            ZStack { Color.black.ignoresSafeArea()
-                LinearGradient(colors: [.gray.opacity(0.2),.black], startPoint: .top, endPoint: .bottom).ignoresSafeArea()
-                RadialGradient(colors: [.red.opacity(0.4),.clear], center: .bottomTrailing, startRadius: 0, endRadius: 500).ignoresSafeArea() }
+            MeshGradient(width: 3, height: 3, points: [
+                [0.0, 0.0], [0.5, 0.0], [1.0, 0.0],
+                [0.0, 0.5], [0.7, 0.3], [1.0, 0.5],
+                [0.0, 1.0], [0.5, 1.0], [1.0, 1.0]
+            ], colors: [
+                Color(red:0.06,green:0.03,blue:0.03), Color(red:0.08,green:0.04,blue:0.04), Color(red:0.04,green:0.02,blue:0.02),
+                Color(red:0.04,green:0.02,blue:0.02), Color(red:0.28,green:0.04,blue:0.04), Color(red:0.18,green:0.03,blue:0.03),
+                Color(red:0.04,green:0.02,blue:0.02), Color(red:0.10,green:0.03,blue:0.03), Color(red:0.06,green:0.02,blue:0.02)
+            ]).ignoresSafeArea()
         case .sunset:
-            ZStack { Color(red:0.2,green:0.05,blue:0.1).ignoresSafeArea()
-                LinearGradient(colors: [.orange.opacity(0.6),.pink.opacity(0.6),.purple.opacity(0.6)], startPoint: .topLeading, endPoint: .bottomTrailing).ignoresSafeArea() }
+            MeshGradient(width: 3, height: 3, points: [
+                [0.0, 0.0], [0.5, 0.0], [1.0, 0.0],
+                [0.0, 0.5], [0.4, 0.6], [1.0, 0.4],
+                [0.0, 1.0], [0.5, 1.0], [1.0, 1.0]
+            ], colors: [
+                Color(red:0.20,green:0.03,blue:0.10), Color(red:0.28,green:0.06,blue:0.08), Color(red:0.18,green:0.04,blue:0.14),
+                Color(red:0.30,green:0.08,blue:0.05), Color(red:0.38,green:0.10,blue:0.18), Color(red:0.24,green:0.06,blue:0.20),
+                Color(red:0.12,green:0.04,blue:0.18), Color(red:0.20,green:0.06,blue:0.22), Color(red:0.14,green:0.04,blue:0.16)
+            ]).ignoresSafeArea()
         case .ocean:
-            ZStack { Color(red:0.0,green:0.1,blue:0.2).ignoresSafeArea()
-                LinearGradient(colors: [.cyan.opacity(0.5),.blue.opacity(0.5)], startPoint: .top, endPoint: .bottom).ignoresSafeArea() }
+            MeshGradient(width: 3, height: 3, points: [
+                [0.0, 0.0], [0.5, 0.0], [1.0, 0.0],
+                [0.0, 0.5], [0.5, 0.4], [1.0, 0.5],
+                [0.0, 1.0], [0.5, 1.0], [1.0, 1.0]
+            ], colors: [
+                Color(red:0.00,green:0.08,blue:0.18), Color(red:0.00,green:0.12,blue:0.24), Color(red:0.00,green:0.08,blue:0.16),
+                Color(red:0.00,green:0.10,blue:0.22), Color(red:0.00,green:0.22,blue:0.36), Color(red:0.00,green:0.12,blue:0.28),
+                Color(red:0.00,green:0.06,blue:0.14), Color(red:0.00,green:0.10,blue:0.20), Color(red:0.00,green:0.06,blue:0.12)
+            ]).ignoresSafeArea()
         }
     }
 }

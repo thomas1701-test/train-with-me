@@ -81,10 +81,10 @@ struct DailySummaryView: View {
     private var statsGrid: some View {
         GlassSection(title: "Heutiger Überblick") {
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                StatCell(icon: "dumbbell.fill",    label: "Volumen",     value: "\(Int(totalVolume)) kg",     color: .green)
-                StatCell(icon: "list.number",      label: "Sätze",       value: "\(totalSets)",               color: .blue)
-                StatCell(icon: "flame.fill",       label: "Kalorien",    value: kcalText,                     color: .orange)
-                StatCell(icon: "heart.fill",       label: "Ø Herzfrq.",  value: hrText,                       color: .red)
+                StatCell(icon: "dumbbell.fill",    label: "Volumen",    value: "\(Int(totalVolume)) kg", color: .green)
+                StatCell(icon: "list.number",      label: "Sätze",      value: "\(totalSets)",          color: .blue)
+                StatCell(icon: "flame.fill",       label: "Kalorien",   value: kcalText,                color: .orange)
+                StatCell(icon: "heart.fill",       label: "Ø Herzfrq.", value: hrText,                  color: .red)
             }
             if !muscles.isEmpty {
                 Divider().background(Color.white.opacity(0.15))
@@ -236,18 +236,29 @@ struct StatCell: View {
     let color: Color
 
     var body: some View {
-        HStack(spacing: 10) {
-            Image(systemName: icon).font(.title3).foregroundColor(color)
-                .frame(width: 28)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(label).font(.caption2).foregroundColor(.white.opacity(0.5))
-                Text(value).font(.subheadline.bold()).foregroundColor(.white)
+        VStack(alignment: .leading, spacing: 8) {
+            HStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: 13, weight: .semibold))
+                    .foregroundColor(color)
+                    .shadow(color: color.opacity(0.6), radius: 4)
+                Text(label)
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundColor(.white.opacity(0.45))
             }
+            Text(value)
+                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(12)
-        .background(color.opacity(0.08))
-        .cornerRadius(12)
-        .overlay(RoundedRectangle(cornerRadius: 12).stroke(color.opacity(0.2), lineWidth: 0.5))
+        .padding(14)
+        .background(
+            ZStack {
+                color.opacity(0.08)
+                LinearGradient(colors: [.white.opacity(0.05), .clear], startPoint: .topLeading, endPoint: .bottomTrailing)
+            }
+        )
+        .cornerRadius(16)
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(color.opacity(0.2), lineWidth: 1))
     }
 }

@@ -38,14 +38,15 @@ struct ContentView: View {
             ZStack {
                 viewModel.currentTheme.backgroundView
                 ScrollView {
-                    VStack(spacing: 24) {
+                    VStack(spacing: 20) {
                         headerSection
+                        heroCard
+                        workoutButtonSection
                         recoverySection
                         trainingIntelligenceSection
-                        workoutButtonSection
                         routinesSection
                         librarySection
-                    }.padding(.bottom, 24)
+                    }.padding(.bottom, 32)
                 }
             }
             .navigationBarHidden(true)
@@ -163,7 +164,78 @@ struct ContentView: View {
     private func headerButton(_ icon: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Image(systemName: icon).font(.body).foregroundColor(.white)
-                .padding(11).background(.ultraThinMaterial).clipShape(Circle())
+                .padding(11)
+                .background(.ultraThinMaterial)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(.white.opacity(0.15), lineWidth: 1))
+        }
+    }
+
+    // MARK: - Hero Card
+
+    private var heroCard: some View {
+        let cal = Calendar.current
+        let todayVolume = viewModel.training.machines.flatMap { $0.sets }.filter { cal.isDateInToday($0.date) }.reduce(0) { $0 + $1.volume }
+        let todaySets   = viewModel.training.machines.flatMap { $0.sets }.filter { cal.isDateInToday($0.date) }.count
+
+        return ZStack(alignment: .bottomLeading) {
+            // Background
+            RoundedRectangle(cornerRadius: 24)
+                .fill(viewModel.currentTheme.accentGradient)
+                .opacity(todayVolume > 0 ? 1.0 : 0.35)
+
+            // Decorative circles
+            Circle().fill(.white.opacity(0.06)).frame(width: 160).offset(x: 180, y: -40)
+            Circle().fill(.white.opacity(0.04)).frame(width: 100).offset(x: 240, y: 20)
+
+            HStack(alignment: .bottom) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(todayVolume > 0 ? "Heute" : "Kein Training heute")
+                        .font(.system(size: 13, weight: .semibold, design: .rounded))
+                        .foregroundColor(.white.opacity(0.75))
+                    if todayVolume > 0 {
+                        Text("\(Int(todayVolume))")
+                            .font(.system(size: 52, weight: .black, design: .rounded))
+                            .foregroundColor(.white)
+                            .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                        Text("kg Volumen")
+                            .font(.system(size: 13, weight: .medium, design: .rounded))
+                            .foregroundColor(.white.opacity(0.75))
+                    } else {
+                        Text("Starte dein erstes\nTraining des Tages")
+                            .font(.system(size: 15, weight: .medium, design: .rounded))
+                            .foregroundColor(.white.opacity(0.8))
+                            .padding(.top, 2)
+                    }
+                }
+                Spacer()
+                if todayVolume > 0 {
+                    VStack(alignment: .trailing, spacing: 10) {
+                        heroStat(value: "\(todaySets)", label: "Sätze")
+                        if viewModel.training.currentStreak > 0 {
+                            heroStat(value: "\(viewModel.training.currentStreak)", label: "Streak 🔥")
+                        }
+                        if viewModel.health.lastWorkoutKcal > 0 {
+                            heroStat(value: "\(Int(viewModel.health.lastWorkoutKcal))", label: "kcal")
+                        }
+                    }
+                }
+            }
+            .padding(20)
+        }
+        .frame(maxWidth: .infinity)
+        .shadow(color: viewModel.currentTheme.accentColor.opacity(todayVolume > 0 ? 0.4 : 0.15), radius: 20, x: 0, y: 8)
+        .padding(.horizontal)
+    }
+
+    private func heroStat(value: String, label: String) -> some View {
+        VStack(alignment: .trailing, spacing: 1) {
+            Text(value)
+                .font(.system(size: 22, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
+            Text(label)
+                .font(.system(size: 11, weight: .medium, design: .rounded))
+                .foregroundColor(.white.opacity(0.65))
         }
     }
 
@@ -171,30 +243,46 @@ struct ContentView: View {
 
     private var recoverySection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Erholung").font(.title3.bold()).foregroundColor(.white)
+            Text("Erholung")
+                .font(.system(.title3, design: .rounded, weight: .bold))
+                .foregroundColor(.white)
+                .padding(.horizontal)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 10) {
                     ForEach(viewModel.training.muscleGroups, id: \.id) { group in
                         let status = viewModel.training.recoveryStatus(for: group.name)
-                        VStack(spacing: 5) {
-                            Text(status.emoji).font(.title2)
-                            Text(group.name).font(.caption2.bold()).foregroundColor(.white).lineLimit(1)
-                            Text(status.label).font(.caption2).foregroundColor(status.color)
+                        VStack(spacing: 6) {
+                            Text(status.emoji).font(.title)
+                            Text(group.name)
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .foregroundColor(.white).lineLimit(1)
+                            Text(status.label)
+                                .font(.system(size: 10, weight: .medium, design: .rounded))
+                                .foregroundColor(status.color)
                         }
-                        .frame(width: 76, height: 76)
-                        .background(status.color.opacity(0.12)).cornerRadius(16)
-                        .overlay(RoundedRectangle(cornerRadius: 16).stroke(status.color.opacity(0.4), lineWidth: 1))
+                        .frame(width: 80, height: 84)
+                        .background(
+                            ZStack {
+                                status.color.opacity(0.10)
+                                LinearGradient(colors: [.white.opacity(0.06), .clear], startPoint: .topLeading, endPoint: .bottomTrailing)
+                            }
+                        )
+                        .cornerRadius(18)
+                        .overlay(RoundedRectangle(cornerRadius: 18).stroke(status.color.opacity(0.35), lineWidth: 1))
+                        .shadow(color: status.color.opacity(0.15), radius: 6, x: 0, y: 3)
                     }
-                }
+                }.padding(.horizontal)
             }
-        }.padding(.horizontal)
+        }
     }
 
     // MARK: - Training Intelligence
 
     private var trainingIntelligenceSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Training Insights").font(.title3.bold()).foregroundColor(.white)
+            Text("Training Insights")
+                .font(.system(.title3, design: .rounded, weight: .bold))
+                .foregroundColor(.white)
             if viewModel.training.shouldSuggestDeload {
                 InsightBanner(emoji: "😴", title: "Deload empfohlen",
                     message: "Du trainierst seit 2 Wochen sehr intensiv (Ø RPE ≥ 8). Eine leichtere Woche fördert die Regeneration.",
@@ -208,7 +296,8 @@ struct ContentView: View {
                     color: viewModel.currentTheme.accentColor)
             }
             VolumeCheckView(viewModel: viewModel)
-        }.padding(.horizontal)
+        }
+        .padding(.horizontal)
     }
 
     // MARK: - Workout Button
@@ -217,19 +306,31 @@ struct ContentView: View {
         Group {
             if !viewModel.isWorkoutActive {
                 Button(action: { withAnimation { viewModel.startWorkout() } }) {
-                    HStack(spacing: 10) { Image(systemName: "play.fill"); Text("Training starten") }
-                        .font(.title3.bold()).foregroundColor(.white)
-                        .frame(maxWidth: .infinity).padding(.vertical, 18)
-                        .background(LinearGradient(colors: [.green, .mint], startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(20).shadow(color: .green.opacity(0.4), radius: 12, x: 0, y: 6)
+                    HStack(spacing: 10) {
+                        Image(systemName: "play.fill")
+                            .font(.system(size: 16, weight: .bold))
+                        Text("Training starten")
+                            .font(.system(.title3, design: .rounded, weight: .bold))
+                    }
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity).padding(.vertical, 18)
+                    .background(LinearGradient(colors: [.green, Color(red:0.0,green:0.8,blue:0.5)], startPoint: .leading, endPoint: .trailing))
+                    .cornerRadius(22)
+                    .shadow(color: .green.opacity(0.5), radius: 16, x: 0, y: 8)
                 }.padding(.horizontal)
             } else {
                 Button(action: { viewModel.finishWorkout(); showEndWorkoutAlert = true }) {
-                    HStack(spacing: 10) { Image(systemName: "stop.fill"); Text("Training beenden") }
-                        .font(.title3.bold()).foregroundColor(.white)
-                        .frame(maxWidth: .infinity).padding(.vertical, 18)
-                        .background(LinearGradient(colors: [.red, .orange], startPoint: .leading, endPoint: .trailing))
-                        .cornerRadius(20).shadow(color: .red.opacity(0.4), radius: 12, x: 0, y: 6)
+                    HStack(spacing: 10) {
+                        Image(systemName: "stop.fill")
+                            .font(.system(size: 16, weight: .bold))
+                        Text("Training beenden")
+                            .font(.system(.title3, design: .rounded, weight: .bold))
+                    }
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity).padding(.vertical, 18)
+                    .background(LinearGradient(colors: [Color(red:0.9,green:0.15,blue:0.15), Color(red:1.0,green:0.45,blue:0.0)], startPoint: .leading, endPoint: .trailing))
+                    .cornerRadius(22)
+                    .shadow(color: .red.opacity(0.5), radius: 16, x: 0, y: 8)
                 }.padding(.horizontal)
             }
         }
@@ -286,14 +387,24 @@ struct ContentView: View {
                 ForEach(viewModel.training.muscleGroups, id: \.id) { group in
                     NavigationLink(destination: MachineListView(viewModel: viewModel, muscle: group.name)) {
                         HStack(spacing: 12) {
-                            Image(systemName: iconFor(group.name)).font(.title3)
-                                .foregroundColor(viewModel.currentTheme.accentColor).frame(width: 28)
-                            Text(group.name).font(.subheadline.bold()).foregroundColor(.white)
+                            ZStack {
+                                Circle()
+                                    .fill(viewModel.currentTheme.accentColor.opacity(0.15))
+                                    .frame(width: 36, height: 36)
+                                Image(systemName: iconFor(group.name))
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(viewModel.currentTheme.accentColor)
+                            }
+                            Text(group.name)
+                                .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                .foregroundColor(.white)
                             Spacer()
-                            Circle().fill(viewModel.training.recoveryStatus(for: group.name).color)
-                                .frame(width: 9, height: 9)
+                            Circle()
+                                .fill(viewModel.training.recoveryStatus(for: group.name).color)
+                                .frame(width: 8, height: 8)
+                                .shadow(color: viewModel.training.recoveryStatus(for: group.name).color.opacity(0.6), radius: 4)
                         }
-                        .padding(.horizontal, 14).padding(.vertical, 16).glassStyle()
+                        .padding(.horizontal, 14).padding(.vertical, 14).glassStyle()
                     }
                     .contextMenu {
                         Button("Umbenennen") { groupToRename = group.name; newRenameName = group.name }

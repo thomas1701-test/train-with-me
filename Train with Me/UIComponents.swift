@@ -6,15 +6,41 @@ import Charts
 struct GlassCard: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .background(.ultraThinMaterial)
+            .background(
+                ZStack {
+                    Color.white.opacity(0.04)
+                    LinearGradient(
+                        colors: [.white.opacity(0.08), .clear],
+                        startPoint: .topLeading, endPoint: .bottomTrailing
+                    )
+                }
+            )
             .cornerRadius(20)
-            .shadow(color: .black.opacity(0.2), radius: 10, x: 0, y: 5)
-            .overlay(RoundedRectangle(cornerRadius: 20).stroke(.white.opacity(0.15), lineWidth: 1))
+            .shadow(color: .black.opacity(0.35), radius: 16, x: 0, y: 8)
+            .overlay(
+                RoundedRectangle(cornerRadius: 20)
+                    .stroke(
+                        LinearGradient(
+                            colors: [.white.opacity(0.22), .white.opacity(0.05)],
+                            startPoint: .topLeading, endPoint: .bottomTrailing
+                        ), lineWidth: 1
+                    )
+            )
+    }
+}
+
+struct GlowModifier: ViewModifier {
+    let color: Color
+    let radius: CGFloat
+    func body(content: Content) -> some View {
+        content.shadow(color: color.opacity(0.7), radius: radius / 2, x: 0, y: 0)
+               .shadow(color: color.opacity(0.4), radius: radius,     x: 0, y: 0)
     }
 }
 
 extension View {
     func glassStyle() -> some View { modifier(GlassCard()) }
+    func glow(color: Color, radius: CGFloat = 12) -> some View { modifier(GlowModifier(color: color, radius: radius)) }
 }
 
 // MARK: - Section Header
@@ -26,7 +52,9 @@ struct SectionHeader: View {
 
     var body: some View {
         HStack(alignment: .center) {
-            Text(title).font(.title3.bold()).foregroundColor(.white)
+            Text(title)
+                .font(.system(.title3, design: .rounded, weight: .bold))
+                .foregroundColor(.white)
             Spacer()
             if let action {
                 Button(action: action) {
@@ -34,8 +62,9 @@ struct SectionHeader: View {
                         .font(.callout.bold())
                         .foregroundColor(.white)
                         .padding(8)
-                        .background(Color.white.opacity(0.12))
+                        .background(Color.white.opacity(0.10))
                         .clipShape(Circle())
+                        .overlay(Circle().stroke(.white.opacity(0.15), lineWidth: 1))
                 }
             }
         }
@@ -52,24 +81,34 @@ struct InsightBanner: View {
     let color: Color
 
     var body: some View {
-        HStack(spacing: 14) {
-            Text(emoji).font(.title2).frame(width: 36)
-            VStack(alignment: .leading, spacing: 4) {
-                Text(title).font(.subheadline.bold()).foregroundColor(.white)
-                Text(message)
-                    .font(.caption).foregroundColor(.white.opacity(0.6))
-                    .fixedSize(horizontal: false, vertical: true)
-                if let footer {
-                    Text(footer).font(.caption.bold()).foregroundColor(color).padding(.top, 1)
+        HStack(spacing: 0) {
+            // Accent bar
+            RoundedRectangle(cornerRadius: 2)
+                .fill(color)
+                .frame(width: 3)
+                .padding(.vertical, 4)
+            HStack(spacing: 12) {
+                Text(emoji).font(.title2).frame(width: 32)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(title)
+                        .font(.system(.subheadline, design: .rounded, weight: .bold))
+                        .foregroundColor(.white)
+                    Text(message)
+                        .font(.caption).foregroundColor(.white.opacity(0.6))
+                        .fixedSize(horizontal: false, vertical: true)
+                    if let footer {
+                        Text(footer).font(.caption.bold()).foregroundColor(color).padding(.top, 1)
+                    }
                 }
+                Spacer(minLength: 0)
             }
-            Spacer(minLength: 0)
+            .padding(.leading, 12)
         }
-        .padding(14)
+        .padding(.vertical, 14).padding(.trailing, 14)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .background(color.opacity(0.12))
+        .background(color.opacity(0.08))
         .cornerRadius(16)
-        .overlay(RoundedRectangle(cornerRadius: 16).stroke(color.opacity(0.3), lineWidth: 1))
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(color.opacity(0.18), lineWidth: 1))
     }
 }
 
@@ -85,8 +124,11 @@ struct GlassSection<Content: View>: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading) {
-            Text(title).font(.headline).foregroundColor(.white.opacity(0.8))
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title.uppercased())
+                .font(.system(size: 11, weight: .semibold, design: .rounded))
+                .foregroundColor(.white.opacity(0.45))
+                .tracking(1.2)
             VStack { content }.padding().glassStyle()
         }
     }
