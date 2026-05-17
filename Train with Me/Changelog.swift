@@ -7,9 +7,20 @@ struct ChangelogEntry {
 }
 
 enum Changelog {
-    static let currentVersion = "1.1.0"
+    static let currentVersion = "1.2.0"
 
     static let entries: [ChangelogEntry] = [
+        ChangelogEntry(
+            version: "1.2.0",
+            date: "17.05.2026",
+            changes: [
+                "HealthKit-Integration massiv erweitert: Kalorien, Herzfrequenz & Trainingsmetadaten",
+                "Verbrauchte Kalorien werden nach dem Training in Apple Health eingetragen",
+                "Herzfrequenz (Ø und Max) wird vom Apple Watch abgerufen und angezeigt",
+                "Trainingseinheit enthält Übungsnamen, Muskelgruppen und Satzanzahl",
+                "Zusammenfassung nach Training zeigt Kalorien und Herzfrequenz direkt an"
+            ]
+        ),
         ChangelogEntry(
             version: "1.1.0",
             date: "17.05.2026",
