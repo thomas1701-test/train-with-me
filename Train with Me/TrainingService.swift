@@ -518,8 +518,8 @@ final class TrainingService {
         var newM: [Machine] = []
         for md in ml {
             let m = Machine(id: md.id, name: md.name, muscleGroup: md.muscleGroup,
-                            imageFileName: md.imageFileName, notes: md.notes, isAssisted: md.isAssisted ?? false, isTimed: md.isTimed ?? false)
-            for sd in md.sets { m.sets.append(ExerciseSet(id: sd.id, weight: sd.weight, reps: sd.reps, date: sd.date)) }
+                            imageFileName: md.imageFileName, notes: md.notes ?? "", isAssisted: md.isAssisted ?? false, isTimed: md.isTimed ?? false)
+            for sd in md.sets { m.sets.append(ExerciseSet(id: sd.id ?? UUID(), weight: sd.weight, reps: sd.reps, date: sd.date)) }
             ctx.insert(m); newM.append(m)
         }
         var newR: [Routine] = []

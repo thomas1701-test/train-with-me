@@ -77,8 +77,8 @@ extension UIImage {
 
 // MARK: - Backup Structs
 
-struct ExerciseSetData: Codable { var id: UUID; var weight: String; var reps: String; var date: Date }
-struct MachineData: Codable { var id: UUID; var name: String; var muscleGroup: String; var imageFileName: String; var notes: String; var isAssisted: Bool?; var isTimed: Bool?; var sets: [ExerciseSetData] }
+struct ExerciseSetData: Codable { var id: UUID?; var weight: String; var reps: String; var date: Date }
+struct MachineData: Codable { var id: UUID; var name: String; var muscleGroup: String; var imageFileName: String; var notes: String?; var isAssisted: Bool?; var isTimed: Bool?; var sets: [ExerciseSetData] }
 struct RoutineData: Codable { var id: UUID; var name: String; var machineIDs: [UUID] }
 struct BackupData: Codable {
     let machines: [MachineData]; let muscleGroups: [String]; let routines: [RoutineData]?
