@@ -50,6 +50,8 @@ struct LiveWorkoutView: View {
                 Spacer()
                 Text(formatElapsed(d.elapsedSeconds))
                     .font(.title2.monospacedDigit().bold()).foregroundColor(.green)
+                    .contentTransition(.numericText())
+                    .animation(.smooth(duration: 0.5), value: d.elapsedSeconds)
             }
         }
         .padding()
@@ -67,6 +69,8 @@ struct LiveWorkoutView: View {
                         .font(.system(size: 64, weight: .black, design: .rounded))
                         .foregroundColor(.cyan)
                         .glow(color: .cyan, radius: 16)
+                        .contentTransition(.numericText())
+                        .animation(.smooth(duration: 0.4), value: d.currentSpeedKmh)
                     Text("km/h aktuell").font(.system(size: 12, weight: .medium, design: .rounded)).foregroundColor(.white.opacity(0.5))
                 }
                 Divider().background(Color.white.opacity(0.1))
@@ -97,6 +101,8 @@ struct LiveWorkoutView: View {
                         .font(.system(size: 36, weight: .black, design: .rounded))
                         .foregroundColor(.green)
                         .glow(color: .green, radius: 10)
+                        .contentTransition(.numericText())
+                        .animation(.smooth(duration: 0.4), value: d.distanceMeters)
                     Text("km").font(.caption).foregroundColor(.white.opacity(0.5))
                 }
                 .frame(maxWidth: .infinity)
@@ -109,6 +115,8 @@ struct LiveWorkoutView: View {
                             .font(.system(size: 36, weight: .black, design: .rounded))
                             .foregroundColor(.red)
                             .glow(color: .red, radius: 10)
+                            .contentTransition(.numericText())
+                            .animation(.smooth(duration: 0.4), value: d.currentHR)
                         Text("bpm").font(.caption).foregroundColor(.white.opacity(0.5))
                             .padding(.bottom, 6)
                     }

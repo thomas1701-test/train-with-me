@@ -463,68 +463,155 @@ struct EndWorkoutSheet: View {
     var viewModel: AppViewModel
     @Binding var isPresented: Bool
 
+    @State private var showVolume = false
+
     var body: some View {
         ZStack {
             viewModel.currentTheme.backgroundView
             ScrollView {
                 VStack(spacing: 24) {
-                    VStack(spacing: 8) {
-                        Text("Training beendet!").font(.largeTitle.bold()).foregroundColor(.white)
-                        Text(viewModel.sessionSummaryMessage ?? "").foregroundColor(.white.opacity(0.6)).multilineTextAlignment(.center)
-                        // Health stats row
-                        HStack(spacing: 20) {
-                            if viewModel.health.lastWorkoutKcal > 0 {
-                                Label("\(Int(viewModel.health.lastWorkoutKcal)) kcal", systemImage: "flame.fill")
-                                    .font(.subheadline.bold())
-                                    .foregroundColor(.orange)
+                    // Hero
+                    VStack(spacing: 10) {
+                        Image(systemName: "checkmark.seal.fill")
+                            .font(.system(size: 52))
+                            .foregroundColor(viewModel.currentTheme.accentColor)
+                            .symbolEffect(.bounce, options: .nonRepeating)
+                            .shadow(color: viewModel.currentTheme.accentColor.opacity(0.5), radius: 16)
+                            .padding(.top, 28)
+
+                        Text("Training beendet!")
+                            .font(.system(.title, design: .rounded, weight: .black))
+                            .foregroundColor(.white)
+
+                        if let summary = viewModel.sessionSummaryMessage {
+                            Text(summary)
+                                .font(.system(.subheadline, design: .rounded))
+                                .foregroundColor(.white.opacity(0.55))
+                                .multilineTextAlignment(.center)
+                        }
+                    }
+
+                    // Volume hero number
+                    let todayVolume = viewModel.training.machines.flatMap { $0.sets }
+                        .filter { Calendar.current.isDateInToday($0.date) }
+                        .reduce(0) { $0 + $1.volume }
+
+                    if todayVolume > 0 {
+                        VStack(spacing: 4) {
+                            Text(showVolume ? "\(Int(todayVolume))" : "0")
+                                .font(.system(size: 64, weight: .black, design: .rounded))
+                                .foregroundColor(viewModel.currentTheme.accentColor)
+                                .glow(color: viewModel.currentTheme.accentColor, radius: 16)
+                                .contentTransition(.numericText())
+                                .animation(.spring(response: 0.8, dampingFraction: 0.7).delay(0.2), value: showVolume)
+                            Text("kg Volumen heute")
+                                .font(.system(size: 13, weight: .medium, design: .rounded))
+                                .foregroundColor(.white.opacity(0.5))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 20)
+                        .background(viewModel.currentTheme.accentColor.opacity(0.08))
+                        .cornerRadius(20)
+                        .overlay(RoundedRectangle(cornerRadius: 20).stroke(viewModel.currentTheme.accentColor.opacity(0.2), lineWidth: 1))
+                    }
+
+                    // Health stats
+                    let hasKcal = viewModel.health.lastWorkoutKcal > 0
+                    let hasHR   = viewModel.health.lastWorkoutAvgHR != nil
+                    if hasKcal || hasHR {
+                        HStack(spacing: 12) {
+                            if hasKcal {
+                                endStat(icon: "flame.fill", value: "\(Int(viewModel.health.lastWorkoutKcal))", label: "kcal", color: .orange)
                             }
                             if let avg = viewModel.health.lastWorkoutAvgHR {
-                                Label("\(Int(avg)) bpm", systemImage: "heart.fill")
-                                    .font(.subheadline.bold())
-                                    .foregroundColor(.red)
+                                endStat(icon: "heart.fill", value: "\(Int(avg))", label: "Ø bpm", color: .red)
                             }
                             if let max = viewModel.health.lastWorkoutMaxHR {
-                                Label("max \(Int(max))", systemImage: "heart.circle.fill")
-                                    .font(.caption)
-                                    .foregroundColor(.red.opacity(0.7))
+                                endStat(icon: "heart.circle.fill", value: "\(Int(max))", label: "Max bpm", color: .pink)
                             }
                         }
-                        .padding(.top, 4)
-                    }.padding(.top, 24)
+                    }
+
+                    // Share card
                     if let img = viewModel.shareImage {
                         VStack(spacing: 12) {
-                            Image(uiImage: img).resizable().scaledToFit().frame(height: 260).cornerRadius(16).shadow(radius: 10)
+                            Image(uiImage: img).resizable().scaledToFit()
+                                .frame(height: 240).cornerRadius(16)
+                                .shadow(color: .black.opacity(0.4), radius: 12)
                             ShareLink(item: Image(uiImage: img), preview: SharePreview("Training", image: Image(uiImage: img))) {
-                                Label("Teilen", systemImage: "square.and.arrow.up").font(.headline).foregroundColor(.white)
-                                    .frame(maxWidth: .infinity).padding().background(Color.blue.opacity(0.8)).cornerRadius(16)
+                                HStack(spacing: 8) {
+                                    Image(systemName: "square.and.arrow.up")
+                                    Text("Teilen")
+                                }
+                                .font(.system(.headline, design: .rounded, weight: .semibold))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity).padding(.vertical, 14)
+                                .background(viewModel.currentTheme.accentGradient)
+                                .cornerRadius(16)
+                                .shadow(color: viewModel.currentTheme.accentColor.opacity(0.4), radius: 10, x: 0, y: 4)
                             }
                         }.padding().glassStyle()
                     }
+
+                    // AI analysis
                     VStack(alignment: .leading, spacing: 12) {
-                        HStack {
-                            Image(systemName: "sparkles").foregroundColor(viewModel.currentTheme.accentColor)
-                            Text("KI Trainingsanalyse").font(.headline).foregroundColor(.white)
+                        HStack(spacing: 8) {
+                            Image(systemName: "sparkles")
+                                .foregroundColor(viewModel.currentTheme.accentColor)
+                                .symbolEffect(.pulse, options: .repeating)
+                            Text("KI Trainingsanalyse")
+                                .font(.system(.headline, design: .rounded, weight: .bold))
+                                .foregroundColor(.white)
                             Spacer()
                         }
                         if viewModel.isAnalyzingWorkout {
                             HStack(spacing: 12) {
                                 ProgressView().tint(.white)
-                                VStack(alignment: .leading, spacing: 4) {
-                                    Text("Analysiere...").foregroundColor(.white).font(.subheadline)
-                                    Text("Vergleiche mit letzten 7 Tagen").foregroundColor(.white.opacity(0.6)).font(.caption)
-                                }
+                                Text("Analysiere...")
+                                    .font(.system(.subheadline, design: .rounded))
+                                    .foregroundColor(.white.opacity(0.6))
                             }.padding(.vertical, 8)
                         } else if viewModel.workoutAnalysis.isEmpty {
-                            Text("Keine Daten für eine Analyse.").foregroundColor(.white.opacity(0.6)).font(.subheadline)
+                            Text("Keine Daten für eine Analyse.")
+                                .foregroundColor(.white.opacity(0.5))
+                                .font(.system(.subheadline, design: .rounded))
                         } else {
-                            Text(viewModel.workoutAnalysis).foregroundColor(.white.opacity(0.6)).font(.subheadline).lineSpacing(5)
+                            Text(viewModel.workoutAnalysis)
+                                .foregroundColor(.white.opacity(0.7))
+                                .font(.system(.subheadline, design: .rounded))
+                                .lineSpacing(5)
                         }
                     }.padding().glassStyle()
+
                     Button(action: { isPresented = false }) {
-                        Text("Schließen").foregroundColor(.white.opacity(0.4)).font(.subheadline).padding(.bottom, 20)
+                        Text("Schließen")
+                            .font(.system(.subheadline, design: .rounded))
+                            .foregroundColor(.white.opacity(0.35))
+                            .padding(.bottom, 24)
                     }
                 }.padding(.horizontal)
             }
         }
+        .onAppear { showVolume = true }
+    }
+
+    private func endStat(icon: String, value: String, label: String, color: Color) -> some View {
+        VStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.system(size: 20))
+                .foregroundColor(color)
+                .shadow(color: color.opacity(0.5), radius: 6)
+            Text(value)
+                .font(.system(size: 22, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
+            Text(label)
+                .font(.system(size: 11, weight: .medium, design: .rounded))
+                .foregroundColor(.white.opacity(0.4))
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 14)
+        .background(color.opacity(0.08))
+        .cornerRadius(16)
+        .overlay(RoundedRectangle(cornerRadius: 16).stroke(color.opacity(0.2), lineWidth: 1))
     }
 }

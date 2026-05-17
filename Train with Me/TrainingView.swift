@@ -77,6 +77,24 @@ struct TrainingView: View {
                     }
                 }
 
+                // Session stats strip
+                let todaySets = currentMachine.sets.filter { Calendar.current.isDateInToday($0.date) }
+                if !todaySets.isEmpty {
+                    let todayVol = todaySets.reduce(0) { $0 + $1.volume }
+                    let maxW = todaySets.compactMap { Double($0.weight.replacingOccurrences(of: ",", with: ".")) }.max() ?? 0
+                    HStack(spacing: 0) {
+                        sessionStat(value: "\(todaySets.count)", label: "Sätze heute")
+                        Divider().background(Color.white.opacity(0.15)).frame(height: 28)
+                        sessionStat(value: maxW > 0 ? "\(Int(maxW)) kg" : "--", label: "Max Gewicht")
+                        Divider().background(Color.white.opacity(0.15)).frame(height: 28)
+                        sessionStat(value: "\(Int(todayVol)) kg", label: "Volumen")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .background(Color.white.opacity(0.04))
+                    .overlay(Rectangle().frame(height: 0.5).foregroundColor(.white.opacity(0.1)), alignment: .bottom)
+                }
+
                 ScrollView {
                     VStack(spacing: 20) {
                         // Notizen
@@ -146,16 +164,33 @@ struct TrainingView: View {
                                 onToggle: toggleStopwatch
                             ).padding(.horizontal)
                         } else {
-                            HStack {
+                            HStack(spacing: 10) {
                                 TextField(isCardio ? "min" : (isAssisted ? "kg Unterstützung" : "kg"), text: $weight)
-                                    .keyboardType(.decimalPad).multilineTextAlignment(.center).padding()
-                                    .background(Color.white.opacity(0.1)).cornerRadius(10).foregroundColor(.white)
+                                    .keyboardType(.decimalPad)
+                                    .multilineTextAlignment(.center)
+                                    .font(.system(.title3, design: .rounded, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .padding(.vertical, 14)
+                                    .background(Color.white.opacity(0.08))
+                                    .cornerRadius(14)
+                                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.12), lineWidth: 1))
                                 TextField(isCardio ? "Level / Kcal" : "Wdh", text: $reps)
-                                    .keyboardType(.decimalPad).multilineTextAlignment(.center).padding()
-                                    .background(Color.white.opacity(0.1)).cornerRadius(10).foregroundColor(.white)
+                                    .keyboardType(.decimalPad)
+                                    .multilineTextAlignment(.center)
+                                    .font(.system(.title3, design: .rounded, weight: .semibold))
+                                    .foregroundColor(.white)
+                                    .padding(.vertical, 14)
+                                    .background(Color.white.opacity(0.08))
+                                    .cornerRadius(14)
+                                    .overlay(RoundedRectangle(cornerRadius: 14).stroke(Color.white.opacity(0.12), lineWidth: 1))
                                 Button(action: addSetAction) {
-                                    Image(systemName: "plus").font(.title).foregroundColor(.white).padding()
-                                        .background(viewModel.currentTheme.accentColor).clipShape(Circle())
+                                    Image(systemName: "plus")
+                                        .font(.system(size: 20, weight: .bold))
+                                        .foregroundColor(.white)
+                                        .frame(width: 52, height: 52)
+                                        .background(viewModel.currentTheme.accentGradient)
+                                        .clipShape(Circle())
+                                        .shadow(color: viewModel.currentTheme.accentColor.opacity(0.4), radius: 8, x: 0, y: 4)
                                 }
                             }.padding(.horizontal)
                         }
@@ -167,34 +202,62 @@ struct TrainingView: View {
 
                         // Sätze
                         ForEach(currentMachine.sets.sorted(by: { $0.date > $1.date })) { set in
-                            HStack {
-                                VStack(alignment: .leading) {
-                                    Text(set.date.formatted(date: .abbreviated, time: .omitted)).font(.caption).foregroundColor(.gray)
+                            HStack(spacing: 12) {
+                                // Date accent
+                                VStack(spacing: 2) {
+                                    Text(set.date.formatted(.dateTime.day()))
+                                        .font(.system(size: 18, weight: .bold, design: .rounded))
+                                        .foregroundColor(.white)
+                                    Text(set.date.formatted(.dateTime.month(.abbreviated)))
+                                        .font(.system(size: 10, weight: .medium, design: .rounded))
+                                        .foregroundColor(.white.opacity(0.4))
+                                }
+                                .frame(width: 36)
+                                .padding(.vertical, 8)
+                                .background(Color.white.opacity(0.06))
+                                .cornerRadius(10)
+
+                                VStack(alignment: .leading, spacing: 4) {
                                     HStack {
                                         if isCardio {
                                             let displayMin  = set.duration.map { String(format: "%.1f", $0) } ?? set.weight
                                             let displayKcal = set.calories.map { String(format: "%.0f", $0) } ?? set.reps
-                                            Text("\(displayMin) min").bold()
-                                            Text("| \(displayKcal) Kcal").bold()
+                                            Text("\(displayMin) min")
+                                                .font(.system(.subheadline, design: .rounded, weight: .bold))
+                                                .foregroundColor(.white)
+                                            Text("· \(displayKcal) kcal")
+                                                .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                                .foregroundColor(.white.opacity(0.6))
                                         } else if isTimed, let dur = set.duration {
                                             Image(systemName: "stopwatch.fill").foregroundColor(.cyan).font(.caption)
-                                            Text(formatStopwatch(dur)).bold()
+                                            Text(formatStopwatch(dur))
+                                                .font(.system(.subheadline, design: .rounded, weight: .bold))
+                                                .foregroundColor(.white)
                                             if let w = Double(set.weight.replacingOccurrences(of: ",", with: ".")), w > 0 {
                                                 Text("+ \(w.truncatingRemainder(dividingBy: 1) == 0 ? "\(Int(w))" : String(format: "%.1f", w)) kg")
-                                                    .font(.caption).foregroundColor(.white.opacity(0.6))
+                                                    .font(.caption).foregroundColor(.white.opacity(0.5))
                                             }
                                         } else if isAssisted {
                                             Image(systemName: "arrow.down.circle.fill").foregroundColor(.blue).font(.caption)
-                                            Text("\(set.weight) kg").bold()
-                                            Text("× \(set.reps)").bold()
+                                            Text("\(set.weight) kg · × \(set.reps)")
+                                                .font(.system(.subheadline, design: .rounded, weight: .bold))
+                                                .foregroundColor(.white)
                                         } else {
-                                            Text("\(set.weight) kg").bold()
-                                            Text("× \(set.reps)").bold()
+                                            Text("\(set.weight) kg")
+                                                .font(.system(.subheadline, design: .rounded, weight: .bold))
+                                                .foregroundColor(.white)
+                                            Text("× \(set.reps)")
+                                                .font(.system(.subheadline, design: .rounded, weight: .semibold))
+                                                .foregroundColor(.white.opacity(0.7))
                                         }
-                                    }.foregroundColor(.white)
+                                    }
+                                    if !isCardio && !isAssisted && !isTimed {
+                                        Text("1RM: \(Int(set.oneRepMax))")
+                                            .font(.system(size: 11, weight: .medium, design: .rounded))
+                                            .foregroundColor(viewModel.currentTheme.accentColor.opacity(0.8))
+                                    }
                                 }
                                 Spacer()
-                                if !isCardio && !isAssisted && !isTimed { Text("1RM: \(Int(set.oneRepMax))").font(.caption).foregroundColor(viewModel.currentTheme.accentColor) }
                                 if !isTimed {
                                     Button(action: {
                                         editRPE = set.rpe ?? 7
@@ -203,12 +266,12 @@ struct TrainingView: View {
                                     }) {
                                         Circle()
                                             .fill(intensityColor(score: set.intensityScore))
-                                            .frame(width: 14, height: 14)
-                                            .overlay(Circle().stroke(Color.white.opacity(0.2), lineWidth: 1))
+                                            .frame(width: 12, height: 12)
+                                            .shadow(color: intensityColor(score: set.intensityScore).opacity(0.6), radius: 4)
                                     }.buttonStyle(.plain)
                                 }
                             }
-                            .padding().glassStyle().padding(.horizontal)
+                            .padding(.horizontal, 14).padding(.vertical, 10).glassStyle().padding(.horizontal)
                             .contextMenu {
                                 if isTimed {
                                     Button("Bearbeiten") {
@@ -225,13 +288,35 @@ struct TrainingView: View {
             }
 
             if showSavedPopup {
-                Image(systemName: "checkmark").font(.system(size: 60)).foregroundColor(.white)
-                    .padding(40).background(.ultraThinMaterial).cornerRadius(20).transition(.scale).zIndex(10)
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 64))
+                    .foregroundColor(.green)
+                    .symbolEffect(.bounce)
+                    .shadow(color: .green.opacity(0.5), radius: 16)
+                    .transition(.scale.combined(with: .opacity))
+                    .zIndex(10)
             }
             if showPRAnimation {
-                Text("NEW RECORD! 🏆").font(.largeTitle.bold()).foregroundColor(.yellow)
-                    .shadow(color: .orange, radius: 10).padding().background(.ultraThinMaterial)
-                    .cornerRadius(20).transition(.scale).zIndex(11)
+                VStack(spacing: 8) {
+                    Image(systemName: "trophy.fill")
+                        .font(.system(size: 44))
+                        .foregroundColor(.yellow)
+                        .symbolEffect(.bounce, options: .repeating.speed(0.7))
+                        .shadow(color: .yellow.opacity(0.8), radius: 12)
+                    Text("NEUER REKORD!")
+                        .font(.system(size: 22, weight: .black, design: .rounded))
+                        .foregroundColor(.white)
+                    Text("🏆")
+                        .font(.system(size: 28))
+                }
+                .padding(.horizontal, 32).padding(.vertical, 20)
+                .background(.ultraThinMaterial)
+                .background(Color.yellow.opacity(0.12))
+                .cornerRadius(24)
+                .overlay(RoundedRectangle(cornerRadius: 24).stroke(Color.yellow.opacity(0.4), lineWidth: 1))
+                .shadow(color: .yellow.opacity(0.3), radius: 20, x: 0, y: 0)
+                .transition(.scale.combined(with: .opacity))
+                .zIndex(11)
             }
         }
         .navigationTitle(currentMachine.name).navigationBarTitleDisplayMode(.inline)
@@ -273,6 +358,19 @@ struct TrainingView: View {
             }
         }
         .onDisappear { Task { let s = TimerAttributes.ContentState(timeRemaining: Int(timeRemaining)); await liveActivity?.end(using: s, dismissalPolicy: .immediate) } }
+    }
+
+    private func sessionStat(value: String, label: String) -> some View {
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundColor(.white)
+                .contentTransition(.numericText())
+            Text(label)
+                .font(.system(size: 10, weight: .medium, design: .rounded))
+                .foregroundColor(.white.opacity(0.45))
+        }
+        .frame(maxWidth: .infinity)
     }
 
     func formatStopwatch(_ seconds: Double) -> String {
