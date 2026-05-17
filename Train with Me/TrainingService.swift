@@ -74,15 +74,19 @@ final class TrainingService {
 
     func renameMachine(machineId: UUID, newName: String) {
         machines.first(where: { $0.id == machineId })?.name = newName
+        saveContext()
     }
 
     func updateMachineImage(machineId: UUID, newImage: UIImage) {
         guard let m = machines.first(where: { $0.id == machineId }) else { return }
-        m.imageFileName = saveImage(image: newImage, id: UUID())
+        deleteImageFile(fileName: m.imageFileName)
+        m.imageFileName = saveImage(image: newImage, id: m.id)
+        saveContext()
     }
 
     func updateMachineNotes(machineId: UUID, notes: String) {
         machines.first(where: { $0.id == machineId })?.notes = notes
+        saveContext()
     }
 
     func deleteMachine(machine: Machine) {
@@ -126,7 +130,7 @@ final class TrainingService {
     func updateSetIntensity(machineId: UUID, setId: UUID, rpe: Int, rir: Int) {
         guard let m = machines.first(where: { $0.id == machineId }),
               let s = m.sets.first(where: { $0.id == setId }) else { return }
-        s.rpe = rpe; s.rir = rir
+        s.rpe = rpe; s.rir = rir; saveContext()
     }
 
     // MARK: - Routine CRUD
@@ -134,7 +138,7 @@ final class TrainingService {
     func addRoutine(name: String, selectedMachines: [Machine]) {
         guard let ctx = modelContext else { return }
         let r = Routine(name: name, machineIDs: selectedMachines.map { $0.id })
-        ctx.insert(r); routines.append(r)
+        ctx.insert(r); routines.append(r); saveContext()
     }
 
     func deleteRoutine(at offsets: IndexSet) {
