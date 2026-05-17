@@ -1,5 +1,11 @@
 import WatchConnectivity
 
+struct IncomingWatchSet: Equatable {
+    let machineName: String
+    let weight: String
+    let reps: String
+}
+
 /// NSObject subclass required for WCSessionDelegate conformance.
 /// @Observable tracks incomingSet so AppViewModel can react to it.
 @Observable
@@ -7,7 +13,7 @@ final class WatchService: NSObject, WCSessionDelegate {
 
     /// Set by session(_:didReceiveUserInfo:) when the Watch logs a set.
     /// AppViewModel observes this and calls TrainingService.addSet.
-    var incomingSet: (machineName: String, weight: String, reps: String)? = nil
+    var incomingSet: IncomingWatchSet? = nil
 
     override init() {
         super.init()
@@ -37,7 +43,7 @@ final class WatchService: NSObject, WCSessionDelegate {
               let weight      = userInfo["weight"]      as? String,
               let reps        = userInfo["reps"]        as? String else { return }
         DispatchQueue.main.async {
-            self.incomingSet = (machineName, weight, reps)
+            self.incomingSet = IncomingWatchSet(machineName: machineName, weight: weight, reps: reps)
         }
     }
 }

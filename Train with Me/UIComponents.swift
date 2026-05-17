@@ -261,3 +261,27 @@ struct ShareView: View {
         }.frame(width: 400, height: 600)
     }
 }
+
+// MARK: - VolumeRow
+
+struct VolumeRow: View {
+    let group: String
+    let sets: Int
+    let status: VolumeStatus
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Text(group)
+                .font(.caption).foregroundColor(.white).frame(width: 80, alignment: .leading)
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: 4).fill(Color.white.opacity(0.08))
+                    RoundedRectangle(cornerRadius: 4)
+                        .fill(status.color.opacity(0.7))
+                        .frame(width: geo.size.width * min(Double(sets) / 20.0, 1.0))
+                }
+            }.frame(height: 8)
+            Text("\(sets)").font(.caption2.monospacedDigit()).foregroundColor(status.color).frame(width: 24, alignment: .trailing)
+        }
+    }
+}
