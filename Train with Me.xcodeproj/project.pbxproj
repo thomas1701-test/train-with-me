@@ -558,6 +558,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Train with Me Watch";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "um Herzfrequenz und Workout-Daten zu lesen.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "um Workouts und Trainingseinheiten zu speichern.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "GPS-Tracking während dem Cardio-Training";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "k.td.Train-with-Me";
@@ -593,6 +595,8 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = "Train with Me Watch";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "um Herzfrequenz und Workout-Daten zu lesen.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "um Workouts und Trainingseinheiten zu speichern.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "GPS-Tracking während dem Cardio-Training";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "k.td.Train-with-Me";
