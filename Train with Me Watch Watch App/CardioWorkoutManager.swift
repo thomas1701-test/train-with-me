@@ -61,6 +61,9 @@ final class CardioWorkoutManager: NSObject {
     private var speedSamples: [Double] = []
     private var collectedLocations: [CLLocation] = []
     private var distanceIdentifier: HKQuantityTypeIdentifier = .distanceWalkingRunning
+    private var workoutStartDate: Date = Date()
+    private var totalPausedSeconds: TimeInterval = 0
+    private var pauseStartDate: Date?
 
     func requestAuth() {
         guard HKHealthStore.isHealthDataAvailable() else { return }
@@ -104,6 +107,8 @@ final class CardioWorkoutManager: NSObject {
             self.avgSpeedKmh = 0; self.maxSpeedKmh = 0; self.currentPaceMinKm = 0
             self.elapsedSeconds = 0; self.speedSamples = []; self.collectedLocations = []
             self.summary = nil
+            self.workoutStartDate = startDate
+            self.totalPausedSeconds = 0; self.pauseStartDate = nil
             self.startTimer()
             self.startLocation()
         }
@@ -113,11 +118,16 @@ final class CardioWorkoutManager: NSObject {
         guard isRunning, !isPaused else { return }
         session?.pause()
         isPaused = true
+        pauseStartDate = Date()
         timer?.invalidate()
     }
 
     func resume() {
         guard isRunning, isPaused else { return }
+        if let ps = pauseStartDate {
+            totalPausedSeconds += Date().timeIntervalSince(ps)
+            pauseStartDate = nil
+        }
         session?.resume()
         isPaused = false
         startTimer()
@@ -188,10 +198,11 @@ final class CardioWorkoutManager: NSObject {
 
     private func startTimer() {
         timer?.invalidate()
-        // .common mode ensures the timer fires even during scroll/gesture tracking
+        // .common mode ensures the timer fires even during scroll/gesture tracking.
+        // elapsed is computed from wall clock — survives screen-off without drift.
         let t = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
             guard let self else { return }
-            self.elapsedSeconds += 1
+            self.elapsedSeconds = Int(Date().timeIntervalSince(self.workoutStartDate) - self.totalPausedSeconds)
             self.sendLiveMetrics()
         }
         RunLoop.main.add(t, forMode: .common)

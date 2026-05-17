@@ -14,6 +14,7 @@ final class WatchWorkoutManager: NSObject {
     private var session: HKWorkoutSession?
     private var builder: HKLiveWorkoutBuilder?
     private var timer: Timer?
+    private var workoutStartDate: Date = Date()
 
     func requestAuth() {
         guard HKHealthStore.isHealthDataAvailable() else { return }
@@ -44,6 +45,7 @@ final class WatchWorkoutManager: NSObject {
             self.isRunning = true
             self.currentHR = 0; self.avgHR = 0; self.maxHR = 0
             self.calories = 0; self.elapsedSeconds = 0
+            self.workoutStartDate = startDate
             self.startTimer()
         }
     }
@@ -61,9 +63,12 @@ final class WatchWorkoutManager: NSObject {
 
     private func startTimer() {
         timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            self?.elapsedSeconds += 1
+        let t = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
+            guard let self else { return }
+            self.elapsedSeconds = Int(Date().timeIntervalSince(self.workoutStartDate))
         }
+        RunLoop.main.add(t, forMode: .common)
+        timer = t
     }
 
     private func stopTimer() {
