@@ -34,7 +34,7 @@ struct WorkoutCalendarView: View {
                     Divider().background(.white.opacity(0.2)).frame(height: 40)
                     statTile(value: "\(Int(totalVolume / 1000))t", label: "Gesamtvolumen")
                     Divider().background(.white.opacity(0.2)).frame(height: 40)
-                    statTile(value: "\(viewModel.currentStreak)🔥", label: "Streak")
+                    statTile(value: "\(viewModel.training.currentStreak)🔥", label: "Streak")
                 }
                 .padding()
                 .glassStyle()
