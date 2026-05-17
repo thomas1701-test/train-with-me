@@ -7,9 +7,21 @@ struct ChangelogEntry {
 }
 
 enum Changelog {
-    static let currentVersion = "1.7.0"
+    static let currentVersion = "1.8.0"
 
     static let entries: [ChangelogEntry] = [
+        ChangelogEntry(
+            version: "1.8.0",
+            date: "17.05.2026",
+            changes: [
+                "Live Workout View: iPhone als Radcomputer/Laufcomputer nutzbar",
+                "Echtzeit-Metriken vom Watch: Geschwindigkeit, Ø/Max Tempo, Distanz",
+                "Herzfrequenz live: aktuell, Ø und Maximum",
+                "Kalorien-Anzeige in Echtzeit",
+                "Öffnet sich automatisch wenn Watch-Training aktiv",
+                "Live-Button im Dashboard sichtbar während aktivem Workout"
+            ]
+        ),
         ChangelogEntry(
             version: "1.7.0",
             date: "17.05.2026",

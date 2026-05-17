@@ -129,6 +129,8 @@ final class CardioWorkoutManager: NSObject {
         timer?.invalidate(); timer = nil
         isRunning = false; isFinished = true
 
+        sendWorkoutStopped()
+
         let s = CardioSummary(
             durationSeconds: elapsedSeconds,
             distanceMeters: distanceMeters,
@@ -188,10 +190,41 @@ final class CardioWorkoutManager: NSObject {
         timer?.invalidate()
         // .common mode ensures the timer fires even during scroll/gesture tracking
         let t = Timer(timeInterval: 1, repeats: true) { [weak self] _ in
-            self?.elapsedSeconds += 1
+            guard let self else { return }
+            self.elapsedSeconds += 1
+            self.sendLiveMetrics()
         }
         RunLoop.main.add(t, forMode: .common)
         timer = t
+    }
+
+    private func sendLiveMetrics() {
+        guard WCSession.isSupported(),
+              WCSession.default.activationState == .activated,
+              WCSession.default.isReachable else { return }
+        let msg: [String: Any] = [
+            "action":           "liveMetrics",
+            "activityName":     selectedActivity.name,
+            "activityIcon":     selectedActivity.icon,
+            "elapsedSeconds":   elapsedSeconds,
+            "currentHR":        currentHR,
+            "avgHR":            avgHR,
+            "maxHR":            maxHR,
+            "currentSpeedKmh":  currentSpeedKmh,
+            "avgSpeedKmh":      avgSpeedKmh,
+            "maxSpeedKmh":      maxSpeedKmh,
+            "distanceMeters":   distanceMeters,
+            "calories":         calories,
+            "currentPaceMinKm": currentPaceMinKm
+        ]
+        WCSession.default.sendMessage(msg, replyHandler: nil, errorHandler: nil)
+    }
+
+    func sendWorkoutStopped() {
+        guard WCSession.isSupported(),
+              WCSession.default.activationState == .activated,
+              WCSession.default.isReachable else { return }
+        WCSession.default.sendMessage(["action": "workoutStopped"], replyHandler: nil, errorHandler: nil)
     }
 
     private func startLocation() {

@@ -18,6 +18,7 @@ struct ContentView: View {
     @State private var showingCalendar       = false
     @State private var showingGamification   = false
     @State private var showingDailySummary   = false
+    @State private var showingLiveWorkout    = false
     @State private var groupToRename: String? = nil
     @State private var newRenameName         = ""
     @State private var streakMilestone: String? = nil
@@ -59,6 +60,7 @@ struct ContentView: View {
             .sheet(isPresented: $showingCalendar)      { WorkoutCalendarView(viewModel: viewModel) }
             .sheet(isPresented: $showingGamification)  { NavigationView { GamificationView(viewModel: viewModel) } }
             .sheet(isPresented: $showingDailySummary)  { DailySummaryView(viewModel: viewModel) }
+            .sheet(isPresented: $showingLiveWorkout)   { LiveWorkoutView(viewModel: viewModel) }
             .alert("Neue Kategorie", isPresented: $showingAddGroupAlert) {
                 TextField("Name", text: $newGroupName)
                 Button("Hinzufügen") { if !newGroupName.isEmpty { viewModel.training.addMuscleGroup(name: newGroupName); newGroupName = "" } }
@@ -103,6 +105,9 @@ struct ContentView: View {
             viewModel.handleIncomingCardioResult(r)
             viewModel.watch.incomingCardioResult = nil
         }
+        .onChange(of: viewModel.watch.liveWorkoutData) { _, new in
+            if new != nil && !showingLiveWorkout { showingLiveWorkout = true }
+        }
     }
 
     // MARK: - Header
@@ -139,6 +144,17 @@ struct ContentView: View {
                     }
                     headerButton("calendar",             action: { showingHistory = true })
                     headerButton("sun.max.fill",         action: { showingDailySummary = true })
+                    if viewModel.watch.liveWorkoutData != nil {
+                        Button(action: { showingLiveWorkout = true }) {
+                            HStack(spacing: 5) {
+                                Circle().fill(.red).frame(width: 6, height: 6)
+                                Text("Live").font(.caption.bold()).foregroundColor(.white)
+                            }
+                            .padding(.horizontal, 12).padding(.vertical, 8)
+                            .background(.red.opacity(0.25)).clipShape(Capsule())
+                            .overlay(Capsule().stroke(.red.opacity(0.5), lineWidth: 1))
+                        }
+                    }
                 }
             }
         }.padding(.horizontal)
