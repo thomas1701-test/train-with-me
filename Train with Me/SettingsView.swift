@@ -1,0 +1,141 @@
+import SwiftUI
+
+struct SettingsView: View {
+    @Bindable var viewModel: AppViewModel
+    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.modelContext) private var modelContext
+
+    @State private var showExporter    = false
+    @State private var showImporter    = false
+    @State private var backupDocument  = BackupDocument(fileURL: URL(fileURLWithPath: ""))
+    @State private var showSuccessAlert = false
+    @State private var durationString  = ""
+
+    var body: some View {
+        ZStack {
+            viewModel.currentTheme.backgroundView
+            ScrollView {
+                VStack(spacing: 20) {
+
+                    GlassSection(title: "Design") {
+                        Picker("Design", selection: $viewModel.currentTheme) {
+                            ForEach(AppTheme.allCases) { theme in Text(theme.rawValue).tag(theme) }
+                        }.pickerStyle(SegmentedPickerStyle())
+                        .onAppear {
+                            UISegmentedControl.appearance().selectedSegmentTintColor = .white.withAlphaComponent(0.3)
+                        }
+                    }
+
+                    GlassSection(title: "Funktionen") {
+                        Toggle("Pausen-Timer", isOn: $viewModel.timerEnabled).foregroundColor(.white)
+                        if viewModel.timerEnabled {
+                            HStack {
+                                Text("Dauer (s)").foregroundColor(.white)
+                                Spacer()
+                                TextField("90", text: $durationString)
+                                    .keyboardType(.numberPad).foregroundColor(.white).multilineTextAlignment(.trailing)
+                                    .onChange(of: durationString) { _, val in
+                                        if let d = Double(val) { viewModel.timerDuration = d }
+                                    }
+                            }
+                        }
+                    }
+
+                    GlassSection(title: "Integrationen & Gesundheit") {
+                        Toggle("Apple Health Sync", isOn: $viewModel.healthKitEnabled).foregroundColor(.white)
+                            .onChange(of: viewModel.healthKitEnabled) { _, enabled in
+                                if enabled {
+                                    viewModel.health.requestAuthorization { success in
+                                        if !success { viewModel.healthKitEnabled = false }
+                                    }
+                                }
+                            }
+                        Toggle("Körperdaten erfassen", isOn: $viewModel.bodyStatsEnabled).foregroundColor(.white)
+                            .onChange(of: viewModel.bodyStatsEnabled) { _, enabled in
+                                if enabled {
+                                    viewModel.health.requestAuthorization { success in
+                                        if !success { viewModel.bodyStatsEnabled = false }
+                                    }
+                                }
+                            }
+                        Toggle("Blutdruck erfassen", isOn: $viewModel.bloodPressureEnabled).foregroundColor(.white)
+                        Button(action: {
+                            viewModel.backup.importCardioFromHealth(training: viewModel.training, health: viewModel.health) {
+                                showSuccessAlert = true
+                            }
+                        }) {
+                            Label("Cardio aus Health importieren", systemImage: "heart.text.square")
+                                .foregroundColor(.white)
+                        }
+                    }
+
+                    GlassSection(title: "Apple Watch") {
+                        Button(action: {
+                            viewModel.syncMachinesToWatch()
+                            viewModel.backup.message = "Daten an Uhr gesendet! ⌚️"
+                            showSuccessAlert = true
+                        }) {
+                            Label("Uhr manuell synchronisieren", systemImage: "applewatch").foregroundColor(.white)
+                        }
+                    }
+
+                    GlassSection(title: "Daten") {
+                        Button(action: {
+                            if let url = viewModel.backup.createBackupFile(training: viewModel.training, health: viewModel.health) {
+                                backupDocument = BackupDocument(fileURL: url)
+                                showExporter = true
+                            }
+                            // Fehler wird automatisch via viewModel.errorMessage angezeigt
+                        }) {
+                            Label("Backup exportieren", systemImage: "square.and.arrow.up").foregroundColor(.white)
+                        }
+
+                        Divider().background(Color.white)
+
+                        Button(action: { showImporter = true }) {
+                            Label("Backup importieren", systemImage: "square.and.arrow.down").foregroundColor(.white)
+                        }
+
+                        Divider().background(Color.white)
+
+                        if let url = viewModel.backup.generateCSV(machines: viewModel.training.machines) {
+                            ShareLink(item: url, preview: SharePreview("Training.csv")) {
+                                Label("CSV Export", systemImage: "tablecells").foregroundColor(.white)
+                            }
+                        }
+                    }
+                }.padding()
+            }
+        }
+        .navigationTitle("Einstellungen")
+        .toolbar { Button("Fertig") { presentationMode.wrappedValue.dismiss() } }
+        .onAppear { durationString = String(format: "%.0f", viewModel.timerDuration) }
+        .fileExporter(isPresented: $showExporter, document: backupDocument, contentType: .json, defaultFilename: "Backup") { result in
+            switch result {
+            case .success:
+                viewModel.backup.message = "Backup erfolgreich exportiert!"
+                showSuccessAlert = true
+            case .failure(let error):
+                viewModel.errorMessage = "Export fehlgeschlagen: \(error.localizedDescription)"
+            }
+        }
+        .fileImporter(isPresented: $showImporter, allowedContentTypes: [.json], allowsMultipleSelection: false) { result in
+            switch result {
+            case .success(let urls):
+                guard let url = urls.first else { return }
+                if let data = try? Data(contentsOf: url) {
+                    viewModel.backup.restoreBackupData(data, training: viewModel.training, health: viewModel.health, ctx: modelContext, healthKitEnabled: viewModel.healthKitEnabled)
+                }
+                if viewModel.errorMessage == nil { showSuccessAlert = true }
+            case .failure(let error):
+                viewModel.errorMessage = "Datei konnte nicht geöffnet werden: \(error.localizedDescription)"
+            }
+        }
+        // Erfolgs-Alert (getrennt vom Fehler-Alert in ContentView)
+        .alert("Erfolg", isPresented: $showSuccessAlert) {
+            Button("OK") { showSuccessAlert = false }
+        } message: {
+            Text(viewModel.backup.message ?? "")
+        }
+    }
+}
