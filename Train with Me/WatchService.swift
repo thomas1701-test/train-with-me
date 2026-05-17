@@ -6,7 +6,7 @@ struct IncomingWatchSet: Equatable {
     let reps: String
 }
 
-struct LiveWorkoutData {
+struct LiveWorkoutData: Equatable {
     let activityName: String
     let activityIcon: String
     let elapsedSeconds: Int
