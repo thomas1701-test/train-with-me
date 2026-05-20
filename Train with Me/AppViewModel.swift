@@ -43,7 +43,14 @@ final class AppViewModel {
 
     // MARK: - AI
 
-    var isAIEnabled: Bool { KeychainService.load() != nil }
+    var aiKeyVersion: Int = 0
+
+    var isAIEnabled: Bool {
+        _ = aiKeyVersion
+        return KeychainService.load() != nil
+    }
+
+    func notifyAIKeyChanged() { aiKeyVersion += 1 }
 
     // MARK: - Setup
 

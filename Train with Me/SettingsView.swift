@@ -129,11 +129,12 @@ struct SettingsView: View {
                         }
                     }
                     .sheet(isPresented: $showAISetup) {
-                        AIOnboardingView(isPresented: $showAISetup)
+                        AIOnboardingView(isPresented: $showAISetup, onActivated: { viewModel.notifyAIKeyChanged() })
                     }
                     .alert("KI deaktivieren?", isPresented: $showDeleteAIAlert) {
                         Button("Deaktivieren", role: .destructive) {
                             KeychainService.delete()
+                            viewModel.notifyAIKeyChanged()
                         }
                         Button("Abbrechen", role: .cancel) {}
                     } message: {
