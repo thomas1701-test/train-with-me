@@ -129,7 +129,7 @@ struct GlassSection<Content: View>: View {
                 .font(.system(size: 11, weight: .semibold, design: .rounded))
                 .foregroundColor(.white.opacity(0.45))
                 .tracking(1.2)
-            VStack { content }.padding().glassStyle()
+            VStack(alignment: .leading) { content }.padding().glassStyle()
         }
     }
 }

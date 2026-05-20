@@ -148,15 +148,30 @@ struct MedicalExportView: View {
             bodyFatLast: viewModel.health.bodyFatHistory.last?.value
         )
 
-        let renderer = ImageRenderer(content: content)
-        renderer.scale = UIScreen.main.scale
-        renderer.proposedSize = ProposedViewSize(width: 595, height: nil)
+        let hosting = UIHostingController(rootView: content)
+        hosting.view.backgroundColor = .white
 
-        guard let image = renderer.uiImage, image.size.height > 10 else {
-            isGenerating = false; return
+        // Attach temporarily to a window so Auto Layout can measure the content
+        let window = UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }.first?.windows.first
+        window?.addSubview(hosting.view)
+        hosting.view.isHidden = true
+
+        let fittingSize = hosting.view.sizeThatFits(
+            CGSize(width: 595, height: UIView.layoutFittingExpandedSize.height)
+        )
+        let pageSize = CGSize(width: 595, height: max(fittingSize.height, 100))
+        hosting.view.frame = CGRect(origin: .zero, size: pageSize)
+        hosting.view.layoutIfNeeded()
+
+        let imgRenderer = UIGraphicsImageRenderer(size: pageSize)
+        let image = imgRenderer.image { _ in
+            hosting.view.drawHierarchy(in: hosting.view.bounds, afterScreenUpdates: true)
         }
+        hosting.view.removeFromSuperview()
 
-        let pageSize = CGSize(width: image.size.width, height: image.size.height)
+        guard image.size.height > 10 else { isGenerating = false; return }
+
         let pdfRenderer = UIGraphicsPDFRenderer(bounds: CGRect(origin: .zero, size: pageSize))
         let data = pdfRenderer.pdfData { ctx in
             ctx.beginPage()
@@ -266,7 +281,6 @@ struct MedicalReportContent: View {
         }
         .frame(width: 595)
         .background(Color.white)
-        .fixedSize(horizontal: true, vertical: true)
     }
 
     // MARK: - Header
