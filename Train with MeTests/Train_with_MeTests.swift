@@ -10,8 +10,27 @@ import Testing
 
 struct Train_with_MeTests {
 
-    @Test func example() async throws {
-        // Write your test here and use APIs like `#expect(...)` to check expected conditions.
+    @Test func keychainSaveAndLoad() {
+        KeychainService.save("test-key-abc123")
+        #expect(KeychainService.load() == "test-key-abc123")
+        KeychainService.delete()
     }
 
+    @Test func keychainLoadReturnsNilWhenEmpty() {
+        KeychainService.delete()
+        #expect(KeychainService.load() == nil)
+    }
+
+    @Test func keychainDeleteClearsKey() {
+        KeychainService.save("will-be-deleted")
+        KeychainService.delete()
+        #expect(KeychainService.load() == nil)
+    }
+
+    @Test func keychainOverwritesPreviousKey() {
+        KeychainService.save("first-key")
+        KeychainService.save("second-key")
+        #expect(KeychainService.load() == "second-key")
+        KeychainService.delete()
+    }
 }
