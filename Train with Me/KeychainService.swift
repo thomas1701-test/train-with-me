@@ -5,17 +5,19 @@ enum KeychainService {
     private static let service = "de.trainingapp.apikey"
     private static let account = "gemini"
 
-    static func save(_ key: String) {
+    @discardableResult
+    static func save(_ key: String) -> Bool {
         let data = Data(key.utf8)
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
-            kSecAttrAccount: account
+            kSecAttrAccount: account,
+            kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
         ]
         SecItemDelete(query as CFDictionary)
         var attrs = query
         attrs[kSecValueData] = data
-        SecItemAdd(attrs as CFDictionary, nil)
+        return SecItemAdd(attrs as CFDictionary, nil) == errSecSuccess
     }
 
     static func load() -> String? {
@@ -23,6 +25,7 @@ enum KeychainService {
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
             kSecAttrAccount: account,
+            kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly,
             kSecReturnData: true,
             kSecMatchLimit: kSecMatchLimitOne
         ]
@@ -36,7 +39,8 @@ enum KeychainService {
         let query: [CFString: Any] = [
             kSecClass: kSecClassGenericPassword,
             kSecAttrService: service,
-            kSecAttrAccount: account
+            kSecAttrAccount: account,
+            kSecAttrAccessible: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly
         ]
         SecItemDelete(query as CFDictionary)
     }
