@@ -139,12 +139,16 @@ struct ContentView: View {
                     headerButton("calendar.badge.clock", action: { showingCalendar = true })
                     headerButton("trophy.fill",          action: { showingPRDashboard = true })
                     headerButton("flame.fill",           action: { showingHeatmap = true })
-                    headerButton("sparkles",             action: { showingSmartStats = true })
+                    if viewModel.isAIEnabled {
+                        headerButton("sparkles", action: { showingSmartStats = true })
+                    }
                     if viewModel.bodyStatsEnabled {
                         headerButton("figure.arms.open", action: { showingBodyStats = true })
                     }
                     headerButton("calendar",             action: { showingHistory = true })
-                    headerButton("sun.max.fill",         action: { showingDailySummary = true })
+                    if viewModel.isAIEnabled {
+                        headerButton("sun.max.fill", action: { showingDailySummary = true })
+                    }
                     if viewModel.watch.liveWorkoutData != nil {
                         Button(action: { showingLiveWorkout = true }) {
                             HStack(spacing: 5) {
@@ -554,34 +558,36 @@ struct EndWorkoutSheet: View {
                     }
 
                     // AI analysis
-                    VStack(alignment: .leading, spacing: 12) {
-                        HStack(spacing: 8) {
-                            Image(systemName: "sparkles")
-                                .foregroundColor(viewModel.currentTheme.accentColor)
-                                .symbolEffect(.pulse, options: .repeating)
-                            Text("KI Trainingsanalyse")
-                                .font(.system(.headline, design: .rounded, weight: .bold))
-                                .foregroundColor(.white)
-                            Spacer()
-                        }
-                        if viewModel.isAnalyzingWorkout {
-                            HStack(spacing: 12) {
-                                ProgressView().tint(.white)
-                                Text("Analysiere...")
+                    if viewModel.isAIEnabled {
+                        VStack(alignment: .leading, spacing: 12) {
+                            HStack(spacing: 8) {
+                                Image(systemName: "sparkles")
+                                    .foregroundColor(viewModel.currentTheme.accentColor)
+                                    .symbolEffect(.pulse, options: .repeating)
+                                Text("KI Trainingsanalyse")
+                                    .font(.system(.headline, design: .rounded, weight: .bold))
+                                    .foregroundColor(.white)
+                                Spacer()
+                            }
+                            if viewModel.isAnalyzingWorkout {
+                                HStack(spacing: 12) {
+                                    ProgressView().tint(.white)
+                                    Text("Analysiere...")
+                                        .font(.system(.subheadline, design: .rounded))
+                                        .foregroundColor(.white.opacity(0.6))
+                                }.padding(.vertical, 8)
+                            } else if viewModel.workoutAnalysis.isEmpty {
+                                Text("Keine Daten für eine Analyse.")
+                                    .foregroundColor(.white.opacity(0.5))
                                     .font(.system(.subheadline, design: .rounded))
-                                    .foregroundColor(.white.opacity(0.6))
-                            }.padding(.vertical, 8)
-                        } else if viewModel.workoutAnalysis.isEmpty {
-                            Text("Keine Daten für eine Analyse.")
-                                .foregroundColor(.white.opacity(0.5))
-                                .font(.system(.subheadline, design: .rounded))
-                        } else {
-                            Text(viewModel.workoutAnalysis)
-                                .foregroundColor(.white.opacity(0.7))
-                                .font(.system(.subheadline, design: .rounded))
-                                .lineSpacing(5)
-                        }
-                    }.padding().glassStyle()
+                            } else {
+                                Text(viewModel.workoutAnalysis)
+                                    .foregroundColor(.white.opacity(0.7))
+                                    .font(.system(.subheadline, design: .rounded))
+                                    .lineSpacing(5)
+                            }
+                        }.padding().glassStyle()
+                    }
 
                     Button(action: { isPresented = false }) {
                         Text("Schließen")
