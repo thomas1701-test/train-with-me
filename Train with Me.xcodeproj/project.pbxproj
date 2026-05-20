@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E9DEB64E2F464E63003673E8 /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9DEB64D2F464E58003673E8 /* Secrets.swift */; };
 		E9DEB6522F465017003673E8 /* GoogleGenerativeAI in Frameworks */ = {isa = PBXBuildFile; productRef = E9DEB6512F465017003673E8 /* GoogleGenerativeAI */; };
 		E9DEB6592F4712EF003673E8 /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DEB6582F4712EF003673E8 /* WidgetKit.framework */; };
 		E9DEB65B2F4712EF003673E8 /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E9DEB65A2F4712EF003673E8 /* SwiftUI.framework */; };
@@ -74,7 +73,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		E9DEB64D2F464E58003673E8 /* Secrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secrets.swift; sourceTree = "<group>"; };
 		E9DEB6572F4712EF003673E8 /* TimerWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = TimerWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9DEB6582F4712EF003673E8 /* WidgetKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WidgetKit.framework; path = System/Library/Frameworks/WidgetKit.framework; sourceTree = SDKROOT; };
 		E9DEB65A2F4712EF003673E8 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
@@ -182,7 +180,6 @@
 			isa = PBXGroup;
 			children = (
 				F0CC60C1F0B74E0794CA70EB /* Secrets.xcconfig */,
-				E9DEB64D2F464E58003673E8 /* Secrets.swift */,
 				E9E855AC2F327AAC006EB83C /* Train with Me */,
 				E9E855BD2F327AB1006EB83C /* Train with MeTests */,
 				E9E855C72F327AB1006EB83C /* Train with MeUITests */,
@@ -440,7 +437,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				E9DEB6732F47134F003673E8 /* TimerAttributes.swift in Sources */,
-				E9DEB64E2F464E63003673E8 /* Secrets.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
