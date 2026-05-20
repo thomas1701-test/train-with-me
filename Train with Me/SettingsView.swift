@@ -10,6 +10,8 @@ struct SettingsView: View {
     @State private var showSuccessAlert = false
     @State private var durationString  = ""
     @State private var showMedicalExport = false
+    @State private var showAISetup        = false
+    @State private var showDeleteAIAlert  = false
 
     var body: some View {
         ZStack {
@@ -84,6 +86,58 @@ struct SettingsView: View {
                             Label("Arztbericht erstellen", systemImage: "doc.text.magnifyingglass")
                                 .foregroundColor(.white)
                         }
+                    }
+
+                    GlassSection(title: "KI-Funktionen") {
+                        if viewModel.isAIEnabled {
+                            HStack {
+                                Image(systemName: "checkmark.circle.fill")
+                                    .foregroundColor(.green)
+                                Text("KI aktiv")
+                                    .foregroundColor(.white)
+                                Spacer()
+                                if let key = KeychainService.load() {
+                                    let masked = String(key.prefix(8)) + "••••••••" + String(key.suffix(4))
+                                    Text(masked)
+                                        .font(.system(.caption, design: .monospaced))
+                                        .foregroundColor(.white.opacity(0.4))
+                                }
+                            }
+                            Divider().background(Color.white.opacity(0.2))
+                            Button(action: { showAISetup = true }) {
+                                Label("Key ändern", systemImage: "key.fill")
+                                    .foregroundColor(.white)
+                            }
+                            Divider().background(Color.white.opacity(0.2))
+                            Button(action: { showDeleteAIAlert = true }) {
+                                Label("KI deaktivieren", systemImage: "xmark.circle")
+                                    .foregroundColor(.red.opacity(0.8))
+                            }
+                        } else {
+                            HStack {
+                                Image(systemName: "sparkles")
+                                    .foregroundColor(.white.opacity(0.5))
+                                Text("KI nicht eingerichtet")
+                                    .foregroundColor(.white.opacity(0.6))
+                                Spacer()
+                            }
+                            Divider().background(Color.white.opacity(0.2))
+                            Button(action: { showAISetup = true }) {
+                                Label("KI-Analysen aktivieren", systemImage: "arrow.right.circle")
+                                    .foregroundColor(.white)
+                            }
+                        }
+                    }
+                    .sheet(isPresented: $showAISetup) {
+                        AIOnboardingView(isPresented: $showAISetup)
+                    }
+                    .alert("KI deaktivieren?", isPresented: $showDeleteAIAlert) {
+                        Button("Deaktivieren", role: .destructive) {
+                            KeychainService.delete()
+                        }
+                        Button("Abbrechen", role: .cancel) {}
+                    } message: {
+                        Text("Der API Key wird gelöscht. KI-Features sind danach nicht mehr sichtbar.")
                     }
 
                     GlassSection(title: "Daten") {
