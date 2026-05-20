@@ -124,8 +124,8 @@ final class GeminiService {
     // MARK: - API Call
 
     private func call(prompt: String) async -> String {
-        let key = Secrets.geminiKey.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !key.isEmpty, !key.contains("YOUR_") else { return "Kein gültiger API Key." }
+        guard let key = KeychainService.load()?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !key.isEmpty else { return "Kein API Key konfiguriert." }
         do {
             let r = try await GenerativeModel(name: "gemini-2.5-flash", apiKey: key).generateContent(prompt)
             return r.text ?? "Keine Antwort."
