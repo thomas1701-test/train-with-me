@@ -41,6 +41,10 @@ final class AppViewModel {
         return .midnight
     }() { didSet { if let d = try? JSONEncoder().encode(currentTheme) { UserDefaults.standard.set(d, forKey: "AppTheme") } } }
 
+    // MARK: - AI
+
+    var isAIEnabled: Bool { KeychainService.load() != nil }
+
     // MARK: - Setup
 
     func configure(modelContext: ModelContext) {
@@ -100,7 +104,7 @@ final class AppViewModel {
                 let bodyWeight = health.currentWeight > 0 ? health.currentWeight : 80.0
                 health.lastWorkoutKcal = max(5.0 * bodyWeight * hours, vol * 0.06)
             }
-            if !todayData.isEmpty {
+            if !todayData.isEmpty && isAIEnabled {
                 Task { await analyzeCompletedWorkout(todaysSets: todayData) }
             }
         } else {
