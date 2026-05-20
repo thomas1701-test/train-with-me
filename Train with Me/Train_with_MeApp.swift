@@ -5,6 +5,7 @@ import SwiftData
 struct Train_with_MeApp: App {
     let container: ModelContainer
     @State private var appViewModel = AppViewModel()
+    @State private var showAIOnboarding = false
 
     init() {
         let schema = Schema([
@@ -37,6 +38,19 @@ struct Train_with_MeApp: App {
             ContentView()
                 .environment(appViewModel)
                 .modelContainer(container)
+                .sheet(isPresented: $showAIOnboarding) {
+                    AIOnboardingView(isPresented: $showAIOnboarding, onActivated: {
+                        appViewModel.notifyAIKeyChanged()
+                    })
+                }
+                .onAppear {
+                    let seen = UserDefaults.standard.bool(forKey: "hasSeenAIOnboarding")
+                    if !seen {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            showAIOnboarding = true
+                        }
+                    }
+                }
         }
     }
 }
