@@ -135,8 +135,9 @@ struct AIOnboardingView: View {
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.never)
                 .padding(.horizontal, 28)
+                .onChange(of: apiKeyInput) { _, _ in showError = false }
             if showError {
-                Text("Bitte einen gültigen Key eingeben (beginnt mit 'AIza').")
+                Text("Bitte einen API Key eingeben.")
                     .font(.caption)
                     .foregroundColor(.red.opacity(0.8))
                     .padding(.horizontal, 28)
