@@ -178,7 +178,7 @@ struct AIOnboardingView: View {
     private func activate() {
         let trimmed = apiKeyInput.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { showError = true; return }
-        KeychainService.save(trimmed)
+        guard KeychainService.save(trimmed) else { showError = true; return }
         UserDefaults.standard.set(true, forKey: "hasSeenAIOnboarding")
         onActivated()
         isPresented = false
