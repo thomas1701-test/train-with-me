@@ -81,7 +81,6 @@
 		E9E855AA2F327AAC006EB83C /* Train with Me.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Train with Me.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E855BA2F327AB1006EB83C /* Train with MeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Train with MeTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9E855C42F327AB1006EB83C /* Train with MeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Train with MeUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		F0CC60C1F0B74E0794CA70EB /* Secrets.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secrets.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -179,7 +178,6 @@
 		E9E855A12F327AAC006EB83C = {
 			isa = PBXGroup;
 			children = (
-				F0CC60C1F0B74E0794CA70EB /* Secrets.xcconfig */,
 				E9E855AC2F327AAC006EB83C /* Train with Me */,
 				E9E855BD2F327AB1006EB83C /* Train with MeTests */,
 				E9E855C72F327AB1006EB83C /* Train with MeUITests */,
@@ -737,7 +735,6 @@
 		};
 		E9E855CF2F327AB1006EB83C /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F0CC60C1F0B74E0794CA70EB /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -775,7 +772,6 @@
 		};
 		E9E855D02F327AB1006EB83C /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F0CC60C1F0B74E0794CA70EB /* Secrets.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
