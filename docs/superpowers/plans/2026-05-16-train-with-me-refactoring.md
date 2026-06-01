@@ -71,7 +71,7 @@ GEMINI_API_KEY = YOUR_GEMINI_KEY_HERE
 Copy `Secrets.xcconfig.template` to `Secrets.xcconfig` and insert the real key from the current `Secrets.swift`:
 
 ```
-GEMINI_API_KEY = REDACTED_REVOKED_GEMINI_KEY
+GEMINI_API_KEY = <DEIN_GEMINI_KEY>
 ```
 
 - [ ] **Step 3: Wire xcconfig into Xcode project**
